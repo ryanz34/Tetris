@@ -72,6 +72,18 @@ class GamePanel extends JPanel implements KeyListener {
 
     }
 
+    private boolean arrayintersect () {
+        for (int xx = 0; xx < piece.length; xx++) {
+            for (int yy = 0; yy < piece[0].length; yy++) {
+                if (piece[xx][yy] == 1 && board[x+xx][y+yy] == 1) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     //********************************
     public void keyTyped(KeyEvent e) {
@@ -80,9 +92,16 @@ class GamePanel extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == e.VK_LEFT) {
             x -= 1;
+            if (arrayintersect()) {
+                x++;
+            }
             repaint();
         } else if (e.getKeyCode() == e.VK_RIGHT) {
             x += 1;
+
+            if (arrayintersect()) {
+                x--;
+            }
             repaint();
         }
     }
@@ -101,9 +120,24 @@ class GamePanel extends JPanel implements KeyListener {
         if (y == 18) {
             for (int xx = 0; xx < piece.length; xx++) {
                 for (int yy = 0; yy < piece[0].length; yy++) {
-                    board[x + xx][y + yy] = piece[xx][yy];
+                    if (piece[xx][yy] == 1) {
+                        board[x + xx][y + yy] = piece[xx][yy];
+                    }
                 }
             }
+            y = 0;
+            x = 4;
+        } else if (arrayintersect()) {
+            y -= 1;
+
+            for (int xx = 0; xx < piece.length; xx++) {
+                for (int yy = 0; yy < piece[0].length; yy++) {
+                    if (piece[xx][yy] == 1) {
+                        board[x + xx][y + yy] = piece[xx][yy];
+                    }
+                }
+            }
+
             y = 0;
             x = 4;
         }
