@@ -14,24 +14,28 @@ import java.util.HashMap;
 public class Main extends JFrame implements ActionListener {
 
     GamePanel game;
-
+    Menu menu;
     Timer myTimer;
+    boolean gameRunning = false;
 
     public Main() {
         super("Pong game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 790);
+        setSize(700, 790);
         setLayout(new BorderLayout());
 
+        setVisible(true);
+        startGame();
+    }
+
+    public void startGame() {
+        myTimer = new Timer(1000, this);//trigger 20 times per second
+        myTimer.start();
 
         game = new GamePanel();//creating the panel
         //adding the panel
         add(game);
 
-        setVisible(true);
-
-        myTimer = new Timer(1000, this);//trigger 20 times per second
-        myTimer.start();
     }
 
 
@@ -137,7 +141,7 @@ class GamePanel extends JPanel implements KeyListener {
 
 
     public GamePanel() {
-        setSize(400, 790);
+        setSize(700, 790);
 
         try {
             blocks.put(1, ImageIO.read(new File("data/bluebrick.png")));
@@ -291,8 +295,11 @@ class GamePanel extends JPanel implements KeyListener {
                 score ++;
                 System.out.println(score);
                 currentboard.remove(i);
-                currentboard.add(0, new Integer[]{100,0,0,0,0,0,0,0,0,100});
             }
+        }
+
+        while (currentboard.size() != 19) {
+            currentboard.add(0, new Integer[]{100,0,0,0,0,0,0,0,0,100});
         }
 
 
@@ -325,6 +332,9 @@ class GamePanel extends JPanel implements KeyListener {
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.WHITE);
 
+        g.drawString("Score:", (int) (400 + 0.1 % getWidth()), 0);
+        g.drawString(Integer.toString(score), (int) (400 + 0.1 % getWidth()), 30);
+
         for (int yy = 0; yy < piece.length; yy++) {
             for (int xx = 0; xx < piece[0].length; xx++) {
                 if (piece[yy][xx] != 0) {
@@ -340,6 +350,5 @@ class GamePanel extends JPanel implements KeyListener {
                 }
             }
         }
-        g.dispose();
     }
 }
