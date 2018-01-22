@@ -16,7 +16,6 @@ public class Main extends JFrame implements ActionListener {
     GamePanel game;
     Menu menu;
     Timer myTimer;
-    Timer fastDropper;
     boolean gameRunning = false;
 
     public Main() {
@@ -30,11 +29,8 @@ public class Main extends JFrame implements ActionListener {
     }
 
     public void startGame() {
-        myTimer = new Timer(500, this);//trigger 20 times per second
+        myTimer = new Timer(125, this);//trigger 20 times per second
         myTimer.start();
-
-        fastDropper = new Timer(250, this);
-        fastDropper.start();
 
         game = new GamePanel();//creating the panel
         //adding the panel
@@ -46,13 +42,8 @@ public class Main extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent evt) {
 
         if (game != null) {
-            if (evt.getSource() == myTimer) {
-                game.move(false);
+                game.move();
                 game.repaint();
-            } else if (evt.getSource() == fastDropper) {
-                game.move(true);
-                game.repaint();
-            }
         }
 
     }
@@ -71,6 +62,8 @@ class GamePanel extends JPanel implements KeyListener {
     private Integer[][][] pieceStates;
 
     private boolean fastdrop = false;
+
+    private int tick = 0;
 
     private Integer[][][] Z_STATES = {{{1, 1, 0},
                                        {0, 1, 1}},
@@ -251,7 +244,7 @@ class GamePanel extends JPanel implements KeyListener {
         } else if (e.getKeyCode() == e.VK_SPACE) {
             placed = false;
             while (!placed) {
-                move(false);
+                move();
             }
 
             repaint();
@@ -328,8 +321,11 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
 
-    public void move(boolean droping) {
-        if (droping == fastdrop) {
+    public void move() {
+        tick++;
+
+        if (tick >= 8 || fastdrop) {
+            tick = Math.max(0, tick - 8);
             y += 1;
 
             if (y + piece.length > 19 || arrayintersect()) {
