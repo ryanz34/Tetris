@@ -16,6 +16,7 @@ public class Main extends JFrame implements ActionListener {
     GamePanel game;
     Menu menu;
     Timer myTimer;
+    Timer fastDropper;
     boolean gameRunning = false;
 
     public Main() {
@@ -29,8 +30,11 @@ public class Main extends JFrame implements ActionListener {
     }
 
     public void startGame() {
-        myTimer = new Timer(1000, this);//trigger 20 times per second
+        myTimer = new Timer(500, this);//trigger 20 times per second
         myTimer.start();
+
+        fastDropper = new Timer(250, this);
+        fastDropper.start();
 
         game = new GamePanel();//creating the panel
         //adding the panel
@@ -42,8 +46,13 @@ public class Main extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent evt) {
 
         if (game != null) {
-            game.move();
-            game.repaint();
+            if (evt.getSource() == myTimer) {
+                game.move(false);
+                game.repaint();
+            } else if (evt.getSource() == fastDropper) {
+                game.move(true);
+                game.repaint();
+            }
         }
 
     }
@@ -60,6 +69,8 @@ class GamePanel extends JPanel implements KeyListener {
     private Integer[][] piece;
 
     private Integer[][][] pieceStates;
+
+    private boolean fastdrop = false;
 
     private Integer[][][] Z_STATES = {{{1, 1, 0},
                                        {0, 1, 1}},
@@ -126,7 +137,7 @@ class GamePanel extends JPanel implements KeyListener {
         add(O_STATES);
     }};
 
-    private HashMap<Integer, BufferedImage> blocks = new HashMap<Integer, BufferedImage>();
+    private HashMap<Integer, BufferedImage> blocks = new HashMap<>();
 
     private int stateNum;
 
@@ -237,17 +248,22 @@ class GamePanel extends JPanel implements KeyListener {
             } else {
                 repaint();
             }
-        } else if (e.getKeyCode() == e.VK_DOWN) {
+        } else if (e.getKeyCode() == e.VK_SPACE) {
             placed = false;
             while (!placed) {
-                move();
+                move(false);
             }
 
             repaint();
+        } else if (e.getKeyCode() == e.VK_DOWN) {
+            fastdrop = true;
         }
     }
 
     public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == e.VK_DOWN) {
+            fastdrop = false;
+        }
     }
     //********************************
 
@@ -312,14 +328,15 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
 
-    public void move() {
-        y += 1;
+    public void move(boolean droping) {
+        if (droping == fastdrop) {
+            y += 1;
 
-        if (y+piece.length > 19 || arrayintersect()) {
-            y--;
-            placePiece();
+            if (y + piece.length > 19 || arrayintersect()) {
+                y--;
+                placePiece();
+            }
         }
-
     }
 
 
@@ -332,7 +349,7 @@ class GamePanel extends JPanel implements KeyListener {
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.WHITE);
 
-        g.drawString("Score:", (int) (400 + 0.1 % getWidth()), 0);
+        g.drawString("Score:", (int) (400 + 0.1 % getWidth()), 15);
         g.drawString(Integer.toString(score), (int) (400 + 0.1 % getWidth()), 30);
 
         for (int yy = 0; yy < piece.length; yy++) {
