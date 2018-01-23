@@ -21,11 +21,12 @@ public class Main extends JFrame implements ActionListener {
     public Main() {
         super("Pong game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(700, 790);
+        setSize(600, 600);
         setLayout(new BorderLayout());
 
         setVisible(true);
         startGame();
+        setResizable(false);
     }
 
     public void startGame() {
@@ -143,9 +144,12 @@ class GamePanel extends JPanel implements KeyListener {
 
     private int blockType;
 
+    private int nextBlockType, nextPieceStates, nextStateNum;
+    private Integer[][] nextSelectedPiece;
+
 
     public GamePanel() {
-        setSize(700, 790);
+        setSize(600, 600);
 
         try {
             blocks.put(1, ImageIO.read(new File("data/bluebrick.png")));
@@ -173,8 +177,12 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
 
-        blockType = (int) (Math.random() * 7) + 1;
+        nextBlockType = (int) (Math.random() * 7) + 1;
+        nextPieceStates = (int) (Math.random()*7);
+        nextStateNum = (int) (Math.random()*states.get(nextPieceStates).length);
+        nextSelectedPiece = states.get(nextPieceStates)[nextStateNum];
 
+        blockType = (int) (Math.random() * 7) + 1;
         pieceStates = states.get((int) (Math.random()*7));
         stateNum = (int) (Math.random()*pieceStates.length);
         piece = pieceStates[stateNum];
@@ -209,6 +217,8 @@ class GamePanel extends JPanel implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         int previous_state = stateNum;
+
+        System.out.println(e.getKeyCode());
 
         if (e.getKeyCode() == e.VK_LEFT) {
             x -= 1;
@@ -271,11 +281,16 @@ class GamePanel extends JPanel implements KeyListener {
         y = 0;
         x = 4;
 
-        blockType = (int) (Math.random() * 7) + 1;
 
-        pieceStates = states.get((int) (Math.random()*7));
-        stateNum = (int) (Math.random()*pieceStates.length);
+        blockType = nextBlockType;
+        pieceStates = states.get(nextPieceStates);
+        stateNum = nextStateNum;
         piece = pieceStates[stateNum];
+
+        nextBlockType = (int) (Math.random() * 7) + 1;
+        nextPieceStates = (int) (Math.random()*7);
+        nextStateNum = (int) (Math.random()*states.get(nextPieceStates).length);
+        nextSelectedPiece = states.get(nextPieceStates)[nextStateNum];
 
         placed = true;
 
@@ -324,6 +339,8 @@ class GamePanel extends JPanel implements KeyListener {
     public void move() {
         tick++;
 
+        requestFocus();
+
         if (tick >= 8 || fastdrop) {
             tick = Math.max(0, tick - 8);
             y += 1;
@@ -345,13 +362,19 @@ class GamePanel extends JPanel implements KeyListener {
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.WHITE);
 
-        g.drawString("Score:", (int) (400 + 0.1 % getWidth()), 15);
-        g.drawString(Integer.toString(score), (int) (400 + 0.1 % getWidth()), 30);
+
+        for (int yy = 0; yy < nextSelectedPiece.length; yy++) {
+            for (int xx = 0; xx < nextSelectedPiece[0].length; xx++) {
+                if (nextSelectedPiece[yy][xx] == 1) {
+                    g.drawImage(blocks.get(nextBlockType), (int) (400 + 0.1 % getWidth() + xx*30), yy*30 + 200, 30, 30, null);
+                }
+            }
+        }
 
         for (int yy = 0; yy < piece.length; yy++) {
             for (int xx = 0; xx < piece[0].length; xx++) {
                 if (piece[yy][xx] != 0) {
-                    g.drawImage(blocks.get(blockType), (x+xx)*40, (y+yy)*40, 40, 40, null);
+                    g.drawImage(blocks.get(blockType), (x+xx)*30, (y+yy)*30, 30, 30, null);
                 }
             }
         }
@@ -359,7 +382,7 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < 19; yy++) {
             for (int xx = 0; xx < 10; xx++) {
                 if (!board[yy][xx].equals(0)) {
-                    g.drawImage(blocks.get(board[yy][xx]), xx*40, yy*40, 40, 40, null);
+                    g.drawImage(blocks.get(board[yy][xx]), xx*30, yy*30, 30, 30, null);
                 }
             }
         }
