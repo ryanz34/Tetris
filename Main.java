@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.MouseInfo;
 import java.awt.image.BufferedImage;
@@ -169,6 +172,12 @@ class GamePanel extends JPanel implements KeyListener {
             blocks.put(6, ImageIO.read(new File("data/tealbrick.png")));
             blocks.put(7, ImageIO.read(new File("data/yellowbrick.png")));
             blocks.put(100, ImageIO.read(new File("data/graybrick.png")));
+
+            // Sketchy audio loading
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource("soviet.wav"));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start();
 
         } catch (Exception e) {
             e.printStackTrace();
