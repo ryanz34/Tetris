@@ -66,70 +66,61 @@ public class Main extends JFrame implements ActionListener {
     }
 }//*************************************************************
 
-class GamePanel extends JPanel implements KeyListener {
-
-    private Integer[][] piece;
-    private Integer[][][] pieceStates;
-
-    // Clock stuff
-    private boolean fastdrop = false;
-    private int tick = 0;
-
+class piece{
     // Raw blocks
     private Integer[][][] Z_STATES = {{{1, 1, 0},
-                                       {0, 1, 1}},
-                                      {{0, 1},
-                                       {1, 1},
-                                       {1, 0}}};
+            {0, 1, 1}},
+            {{0, 1},
+                    {1, 1},
+                    {1, 0}}};
 
     private Integer[][][] I_Z_STATES = {{{0, 1, 1},
-                                         {1, 1, 0}},
-                                        {{1, 0},
-                                         {1, 1},
-                                         {0, 1}}};
+            {1, 1, 0}},
+            {{1, 0},
+                    {1, 1},
+                    {0, 1}}};
 
     private Integer[][][] L_STATES = {{{1, 0},
-                                       {1, 0},
-                                       {1, 1}},
-                                      {{0, 0, 1},
-                                       {1, 1, 1}},
-                                      {{1, 1},
-                                       {0, 1},
-                                       {0, 1}},
-                                      {{1, 1, 1},
-                                       {1, 0, 0}}};
+            {1, 0},
+            {1, 1}},
+            {{0, 0, 1},
+                    {1, 1, 1}},
+            {{1, 1},
+                    {0, 1},
+                    {0, 1}},
+            {{1, 1, 1},
+                    {1, 0, 0}}};
 
     private Integer[][][] I_L_STATES = {{{0, 1},
-                                         {0, 1},
-                                         {1, 1}},
-                                        {{1, 1, 1},
-                                         {0, 0, 1}},
-                                        {{1, 1},
-                                         {1, 0},
-                                         {1, 0}},
-                                        {{1, 0, 0},
-                                         {1, 1, 1}}};
+            {0, 1},
+            {1, 1}},
+            {{1, 1, 1},
+                    {0, 0, 1}},
+            {{1, 1},
+                    {1, 0},
+                    {1, 0}},
+            {{1, 0, 0},
+                    {1, 1, 1}}};
 
     private Integer[][][] T_STATES = {{{1, 1, 1},
-                                       {0, 1, 0}},
-                                      {{1, 0},
-                                       {1, 1},
-                                       {1, 0}},
-                                      {{0, 1, 0},
-                                       {1, 1, 1}},
-                                      {{0, 1},
-                                       {1, 1},
-                                       {0, 1}}};
+            {0, 1, 0}},
+            {{1, 0},
+                    {1, 1},
+                    {1, 0}},
+            {{0, 1, 0},
+                    {1, 1, 1}},
+            {{0, 1},
+                    {1, 1},
+                    {0, 1}}};
 
     private Integer[][][] I_STATES = {{{1},
-                                       {1},
-                                       {1},
-                                       {1}},
-                                      {{1, 1, 1, 1}}};
+            {1},
+            {1},
+            {1}},
+            {{1, 1, 1, 1}}};
 
     private Integer[][][] O_STATES = {{{1, 1},
-                                       {1, 1}}};
-
+            {1, 1}}};
 
     // Blocks
     private ArrayList<Integer[][][]> states = new ArrayList<Integer[][][]>() {{
@@ -142,21 +133,49 @@ class GamePanel extends JPanel implements KeyListener {
         add(O_STATES);
     }};
 
-    private HashMap<Integer, BufferedImage> blocks = new HashMap<>();
+    public int x, y;
 
-    private int stateNum;
+    public Integer[][] piece;
+    public int stateNum;
+    public Integer[][][] pieceStates;
+    public int blockType;
+
+    public piece() {
+        blockType = (int) (Math.random() * 7) + 1;
+        pieceStates = states.get((int) (Math.random()*7));
+        stateNum = (int) (Math.random()*pieceStates.length);
+        piece = pieceStates[stateNum];
+
+        x = 4;
+        y = 0;
+    }
+
+    public int height() {
+        return piece.length;
+    }
+
+    public int width() {
+        return piece[0].length;
+    }
+
+}
+
+class GamePanel extends JPanel implements KeyListener {
+
+    // Clock stuff
+    private boolean fastdrop = false;
+    private int tick = 0;
+
+    private HashMap<Integer, BufferedImage> blocks = new HashMap<>();
 
     private boolean placed;
 
-    private int x, y, yp;
+    private int yp;
     private Integer[][] board;
 
     private int score = 0;
 
-    private int blockType;
-
-    private int nextBlockType, nextPieceStates, nextStateNum;
-    private Integer[][] nextSelectedPiece;
+    private piece currentPiece, nextPiece;
 
 
     public GamePanel() {
@@ -195,18 +214,8 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
 
-        nextBlockType = (int) (Math.random() * 7) + 1;
-        nextPieceStates = (int) (Math.random()*7);
-        nextStateNum = (int) (Math.random()*states.get(nextPieceStates).length);
-        nextSelectedPiece = states.get(nextPieceStates)[nextStateNum];
-
-        blockType = (int) (Math.random() * 7) + 1;
-        pieceStates = states.get((int) (Math.random()*7));
-        stateNum = (int) (Math.random()*pieceStates.length);
-        piece = pieceStates[stateNum];
-
-        x = 4;
-        y = 0;
+        currentPiece = new piece();
+        nextPiece = new piece();
 
         addKeyListener(this);
         setFocusable(true);
@@ -215,8 +224,8 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     private void previewUpdate() {
-        for (int ypp = y; ypp < 20; ypp++) {
-            if (ypp + piece.length < 20 && !arrayintersect(x, ypp, piece, board)) {
+        for (int ypp = currentPiece.y; ypp < 20; ypp++) {
+            if (ypp + currentPiece.height() < 20 && !arrayintersect(currentPiece.x, ypp, currentPiece, board)) {
                 yp = ypp;
             }
             else {
@@ -225,13 +234,13 @@ class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-    private boolean arrayintersect(int x, int y, Integer[][] piece, Integer[][] board) {
-        for (int yy = 0; yy < piece.length; yy++) {
-            for (int xx = 0; xx < piece[0].length; xx++) {
+    private boolean arrayintersect(int x, int y, piece checkPiece, Integer[][] board) {
+        for (int yy = 0; yy < checkPiece.height(); yy++) {
+            for (int xx = 0; xx < checkPiece.width(); xx++) {
                 if (xx > 9 || yy > 19) {
                     return true;
 
-                } else if (piece[yy][xx] != 0 && board[yy+y][xx+x] != 0) {
+                } else if (checkPiece.piece[yy][xx] != 0 && board[yy+y][xx+x] != 0) {
                     return true;
                 }
             }
@@ -244,14 +253,14 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e) {
-        int previous_state = stateNum;
+        int previous_state = currentPiece.stateNum;
 
         //System.out.println(e.getKeyCode());
 
         if (e.getKeyCode() == e.VK_LEFT) {
-            x -= 1;
-            if (arrayintersect(x, y, piece, board)) {
-                x++;
+            currentPiece.x -= 1;
+            if (arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                currentPiece.x++;
             } else {
                 repaint();
             }
@@ -259,10 +268,10 @@ class GamePanel extends JPanel implements KeyListener {
             previewUpdate();
 
         } else if (e.getKeyCode() == e.VK_RIGHT) {
-            x += 1;
+            currentPiece.x+= 1;
 
-            if (arrayintersect(x, y, piece, board)) {
-                x--;
+            if (arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                currentPiece.x--;
             } else {
                 repaint();
             }
@@ -270,16 +279,16 @@ class GamePanel extends JPanel implements KeyListener {
             previewUpdate();
 
         } else if (e.getKeyCode() == e.VK_UP) {
-            stateNum ++;
-            if (stateNum == pieceStates.length) {
-                stateNum = 0;
+            currentPiece.stateNum ++;
+            if (currentPiece.stateNum == currentPiece.pieceStates.length) {
+                currentPiece.stateNum = 0;
             }
 
-            piece = pieceStates[stateNum];
+            currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
 
-            if (arrayintersect(x, y, piece, board)) {
-                stateNum = previous_state;
-                piece = pieceStates[stateNum];
+            if (arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                currentPiece.stateNum = previous_state;
+                currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
             } else {
                 repaint();
             }
@@ -307,26 +316,17 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     private void placePiece () {
-        for (int yy = 0; yy < piece.length; yy++) {
-            for (int xx = 0; xx < piece[0].length; xx++) {
-                if (piece[yy][xx] == 1) {
-                    board[y+yy][x+xx] = blockType;
+        for (int yy = 0; yy < currentPiece.height(); yy++) {
+            for (int xx = 0; xx < currentPiece.width(); xx++) {
+                if (currentPiece.piece[yy][xx] == 1) {
+                    board[currentPiece.y+yy][currentPiece.x+xx] = currentPiece.blockType;
                 }
             }
         }
-        y = 0;
-        x = 4;
 
+        currentPiece = nextPiece;
 
-        blockType = nextBlockType;
-        pieceStates = states.get(nextPieceStates);
-        stateNum = nextStateNum;
-        piece = pieceStates[stateNum];
-
-        nextBlockType = (int) (Math.random() * 7) + 1;
-        nextPieceStates = (int) (Math.random()*7);
-        nextStateNum = (int) (Math.random()*states.get(nextPieceStates).length);
-        nextSelectedPiece = states.get(nextPieceStates)[nextStateNum];
+        nextPiece = new piece();
 
         placed = true;
 
@@ -376,10 +376,10 @@ class GamePanel extends JPanel implements KeyListener {
 
         if (tick >= 8 || fastdrop) {
             tick = Math.max(0, tick - 8);
-            y += 1;
+            currentPiece.y += 1;
 
-            if (y + piece.length > 19 || arrayintersect(x, y, piece, board)) {
-                y--;
+            if (currentPiece.y + currentPiece.height() > 19 || arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                currentPiece.y--;
                 placePiece();
             }
         }
@@ -404,23 +404,23 @@ class GamePanel extends JPanel implements KeyListener {
         g.drawString(Integer.toString(score), 300, 230);
 
 
-        int nextPieceX = 300 + 100 - nextSelectedPiece[0].length*15;
-        int nextPieceY = 100 - nextSelectedPiece.length*15;
+        int nextPieceX = 300 + 100 - nextPiece.width()*15;
+        int nextPieceY = 100 - nextPiece.height()*15;
 
-        for (int yy = 0; yy < nextSelectedPiece.length; yy++) {
-            for (int xx = 0; xx < nextSelectedPiece[0].length; xx++) {
-                if (nextSelectedPiece[yy][xx] == 1) {
-                    g.drawImage(blocks.get(nextBlockType), xx*30 + nextPieceX, yy*30 + nextPieceY, 30, 30, null);
+        for (int yy = 0; yy < nextPiece.height(); yy++) {
+            for (int xx = 0; xx < nextPiece.width(); xx++) {
+                if (nextPiece.piece[yy][xx] == 1) {
+                    g.drawImage(blocks.get(nextPiece.blockType), xx*30 + nextPieceX, yy*30 + nextPieceY, 30, 30, null);
                 }
             }
         }
 
         // Active block
-        for (int yy = 0; yy < piece.length; yy++) {
-            for (int xx = 0; xx < piece[0].length; xx++) {
-                if (piece[yy][xx] != 0) {
-                    g.fillRect((x+xx)*30, (yp+yy)*30, 30, 30);
-                    g.drawImage(blocks.get(blockType), (x+xx)*30, (y+yy)*30, 30, 30, null);
+        for (int yy = 0; yy < currentPiece.height(); yy++) {
+            for (int xx = 0; xx < currentPiece.width(); xx++) {
+                if (currentPiece.piece[yy][xx] != 0) {
+                    g.fillRect((currentPiece.x+xx)*30, (yp+yy)*30, 30, 30);
+                    g.drawImage(blocks.get(currentPiece.blockType), (currentPiece.x+xx)*30, (currentPiece.y+yy)*30, 30, 30, null);
                 }
             }
         }
