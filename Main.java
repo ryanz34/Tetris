@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.MouseInfo;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -296,7 +295,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         for (int xx = 1; xx < 9; xx++) {
             if (board[0][xx] != 0) {
-                System.out.println("U lose");
+                System.out.println("U lose nigger");
             }
         }
 
@@ -363,10 +362,20 @@ class GamePanel extends JPanel implements KeyListener {
         g.setColor(Color.WHITE);
 
 
+        g.drawRoundRect(300, 0, 200, 200, 10, 10);
+        g.drawString("Next Piece", 320, 10);
+
+        g.drawString("Score:", 300, 220);
+        g.drawString(Integer.toString(score), 300, 230);
+
+
+        int nextPieceX = 300 + 100 - nextSelectedPiece[0].length*15;
+        int nextPieceY = 100 - nextSelectedPiece.length*15;
+
         for (int yy = 0; yy < nextSelectedPiece.length; yy++) {
             for (int xx = 0; xx < nextSelectedPiece[0].length; xx++) {
                 if (nextSelectedPiece[yy][xx] == 1) {
-                    g.drawImage(blocks.get(nextBlockType), (int) (400 + 0.1 % getWidth() + xx*30), yy*30 + 200, 30, 30, null);
+                    g.drawImage(blocks.get(nextBlockType), xx*30 + nextPieceX, yy*30 + nextPieceY, 30, 30, null);
                 }
             }
         }
