@@ -211,6 +211,9 @@ class GamePanel extends JPanel implements KeyListener {
             if (ypp + piece.length < 20 && !arrayintersect(x, ypp, piece, board)) {
                 yp = ypp;
             }
+            else {
+                break;
+            }
         }
     }
 
@@ -353,6 +356,8 @@ class GamePanel extends JPanel implements KeyListener {
             board[yy] = currentboard.get(yy);
         }
 
+        previewUpdate();
+
     }
 
 
@@ -395,8 +400,8 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < piece.length; yy++) {
             for (int xx = 0; xx < piece[0].length; xx++) {
                 if (piece[yy][xx] != 0) {
-                    g.drawImage(blocks.get(blockType), (x+xx)*30, (y+yy)*30, 30, 30, null);
                     g.fillRect((x+xx)*30, (yp+yy)*30, 30, 30);
+                    g.drawImage(blocks.get(blockType), (x+xx)*30, (y+yy)*30, 30, 30, null);
                 }
             }
         }
