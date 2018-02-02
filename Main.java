@@ -332,7 +332,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         for (int xx = 1; xx < 9; xx++) {
             if (board[0][xx] != 0) {
-                System.out.println("U lose nigger");
+                System.out.println("GG");
             }
         }
 
