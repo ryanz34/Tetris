@@ -17,13 +17,16 @@ public class Main extends JFrame implements ActionListener {
     Menu menu;
     Timer myTimer;
     boolean gameRunning = false;
-    String page = "game";
+    String page = "menu";
 
     public Main() {
         super("Tetris");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 600);
         setLayout(new BorderLayout());
+
+        myTimer = new Timer(50, this);//trigger 20 times per second
+        myTimer.start();
 
         setVisible(true);
         setResizable(false);
@@ -33,12 +36,9 @@ public class Main extends JFrame implements ActionListener {
     }
 
     public void startGraphics() {
-        myTimer = new Timer(50, this);//trigger 20 times per second
-        myTimer.start();
-
         switch (page) {
             case "menu":
-                menu = new Menu();
+                menu = new Menu(this);
                 add(menu);
                 break;
 
@@ -49,10 +49,22 @@ public class Main extends JFrame implements ActionListener {
         }
     }
 
+    public void startgame() {
+        this.getContentPane().remove(menu);
+        page = "game";
+        startGraphics();
+    }
+
+    public void exit() {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
     public void actionPerformed(ActionEvent evt) {
         if (game != null) {
-                game.move();
-                game.repaint();
+            game.move();
+            game.repaint();
+        } else if (menu != null) {
+            menu.requestFocus();
         }
     }
 
