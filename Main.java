@@ -40,11 +40,13 @@ public class Main extends JFrame implements ActionListener {
             case "menu":
                 menu = new Menu(this);
                 add(menu);
+                setVisible(true);
                 break;
 
             case "game":
                 game = new GamePanel();
                 add(game);
+                setVisible(true);
                 break;
         }
     }
