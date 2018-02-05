@@ -15,26 +15,29 @@ import java.util.HashMap;
 class GamePanel extends JPanel implements KeyListener {
 
     // Clock stuff
-    private boolean fastdrop = false;
+    public boolean gameOver = false;
+    private boolean fastDrop = false;
     private int tick = 0;
 
+    private BufferedImage background;
     private HashMap<Integer, BufferedImage> blocks = new HashMap<>();
 
     private boolean placed;
 
-    private int yp;
+    private double speed = 8;
+    private int yPreview;
     private Integer[][] board;
 
     private int score = 0;
 
-    private piece currentPiece, nextPiece;
-
+    private Piece currentPiece, nextPiece;
 
     public GamePanel() {
         setSize(600, 600);
 
         // Load images
         try {
+            background = ImageIO.read(new File("data/kremlin.png"));
             blocks.put(1, ImageIO.read(new File("data/bluebrick.png")));
             blocks.put(2, ImageIO.read(new File("data/greenbrick.png")));
             blocks.put(3, ImageIO.read(new File("data/orangebrick.png")));
@@ -66,8 +69,8 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
 
-        currentPiece = new piece();
-        nextPiece = new piece();
+        currentPiece = new Piece();
+        nextPiece = new Piece();
 
         addKeyListener(this);
         setFocusable(true);
@@ -75,10 +78,14 @@ class GamePanel extends JPanel implements KeyListener {
 
     }
 
+    public int getScore() {
+        return score;
+    }
+
     private void previewUpdate() {
         for (int ypp = currentPiece.y; ypp < 20; ypp++) {
-            if (ypp + currentPiece.height() < 20 && !arrayintersect(currentPiece.x, ypp, currentPiece, board)) {
-                yp = ypp;
+            if (ypp + currentPiece.height() < 20 && !arrayIntersect(currentPiece.x, ypp, currentPiece, board)) {
+                yPreview = ypp;
             }
             else {
                 break;
@@ -86,7 +93,7 @@ class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-    private boolean arrayintersect(int x, int y, piece checkPiece, Integer[][] board) {
+    private boolean arrayIntersect(int x, int y, Piece checkPiece, Integer[][] board) {
         for (int yy = 0; yy < checkPiece.height(); yy++) {
             for (int xx = 0; xx < checkPiece.width(); xx++) {
                 if (xx > 9 || yy > 19) {
@@ -107,11 +114,9 @@ class GamePanel extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int previous_state = currentPiece.stateNum;
 
-        //System.out.println(e.getKeyCode());
-
         if (e.getKeyCode() == e.VK_LEFT) {
             currentPiece.x -= 1;
-            if (arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
                 currentPiece.x++;
             } else {
                 repaint();
@@ -122,7 +127,7 @@ class GamePanel extends JPanel implements KeyListener {
         } else if (e.getKeyCode() == e.VK_RIGHT) {
             currentPiece.x+= 1;
 
-            if (arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
                 currentPiece.x--;
             } else {
                 repaint();
@@ -138,7 +143,7 @@ class GamePanel extends JPanel implements KeyListener {
 
             currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
 
-            if (arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
                 currentPiece.stateNum = previous_state;
                 currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
             } else {
@@ -157,13 +162,13 @@ class GamePanel extends JPanel implements KeyListener {
 
             repaint();
         } else if (e.getKeyCode() == e.VK_DOWN) {
-            fastdrop = true;
+            fastDrop = true;
         }
     }
 
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == e.VK_DOWN) {
-            fastdrop = false;
+            fastDrop = false;
         }
     }
 
@@ -177,75 +182,71 @@ class GamePanel extends JPanel implements KeyListener {
         }
 
         currentPiece = nextPiece;
-
-        nextPiece = new piece();
-
+        nextPiece = new Piece();
         placed = true;
 
         for (int xx = 1; xx < 9; xx++) {
             if (board[0][xx] != 0) {
-                System.out.println("GG");
+                gameOver = true;
             }
         }
 
-        ArrayList<Integer[]> currentboard = new ArrayList<>(Arrays.asList(board));
+        ArrayList<Integer[]> currentBoard = new ArrayList<>(Arrays.asList(board));
 
-        boolean isfull;
+        boolean isFull;
 
         for (int i = 18; i > -1; i--) {
-            isfull = true;
+            isFull = true;
             for (int j = 0; j < 10; j++) {
-                if (currentboard.get(i)[j] == 0) {
-                    isfull = false;
+                if (currentBoard.get(i)[j] == 0) {
+                    isFull = false;
                 }
             }
 
-            if (isfull) {
+            if (isFull) {
+                speed = 8 * Math.pow(0.99, score);
                 score ++;
-                System.out.println(score);
-                currentboard.remove(i);
+                System.out.println(speed + " // " + score);
+                currentBoard.remove(i);
             }
         }
 
-        while (currentboard.size() != 19) {
-            currentboard.add(0, new Integer[]{100,0,0,0,0,0,0,0,0,100});
+        while (currentBoard.size() != 19) {
+            currentBoard.add(0, new Integer[]{100,0,0,0,0,0,0,0,0,100});
         }
 
 
         for (int yy = 0; yy < 19; yy++) {
-            board[yy] = currentboard.get(yy);
+            board[yy] = currentBoard.get(yy);
         }
 
         previewUpdate();
 
     }
 
-
     public void move() {
         tick++;
 
         requestFocus();
 
-        if (tick >= 8 || fastdrop) {
-            tick = Math.max(0, tick - 8);
+        if (tick >= (int) speed || fastDrop) {
+            tick = Math.max(0, tick - (int) speed);
             currentPiece.y += 1;
 
-            if (currentPiece.y + currentPiece.height() > 19 || arrayintersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+            if (currentPiece.y + currentPiece.height() > 19 || arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
                 currentPiece.y--;
                 placePiece();
             }
         }
     }
 
-
-    //all drawing code goes here
     public void paintComponent(Graphics g) {
-
-        //System.out.println("Painting");
         super.paintComponent(g);
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.WHITE);
+
+        //g.drawImage(background, 0, 0, null);
 
         // Block Preview
 
@@ -254,7 +255,6 @@ class GamePanel extends JPanel implements KeyListener {
 
         g.drawString("Score:", 300, 220);
         g.drawString(Integer.toString(score), 300, 230);
-
 
         int nextPieceX = 300 + 100 - nextPiece.width()*15;
         int nextPieceY = 100 - nextPiece.height()*15;
@@ -271,7 +271,7 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < currentPiece.height(); yy++) {
             for (int xx = 0; xx < currentPiece.width(); xx++) {
                 if (currentPiece.piece[yy][xx] != 0) {
-                    g.fillRect((currentPiece.x+xx)*30, (yp+yy)*30, 30, 30);
+                    g.fillRect((currentPiece.x+xx)*30, (yPreview +yy)*30, 30, 30);
                     g.drawImage(blocks.get(currentPiece.blockType), (currentPiece.x+xx)*30, (currentPiece.y+yy)*30, 30, 30, null);
                 }
             }

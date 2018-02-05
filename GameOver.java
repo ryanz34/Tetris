@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class Menu extends JPanel implements KeyListener {
+public class GameOver extends JPanel implements KeyListener {
 
     private Main parent;
     private BufferedImage menuImage;
@@ -24,11 +24,11 @@ public class Menu extends JPanel implements KeyListener {
 
     private int selecter_option = 0;
 
-    public Menu (Main parent){
+    public GameOver (Main parent){
         setSize(600, 600);
         this.parent = parent;
 
-        InputStream is = Menu.class.getResourceAsStream("data/PressStart2P.ttf");
+        InputStream is = GameOver.class.getResourceAsStream("data/PressStart2P.ttf");
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
             this.menuFont = font.deriveFont(20f);
@@ -42,7 +42,6 @@ public class Menu extends JPanel implements KeyListener {
         addKeyListener(this);
 
         repaint();
-
     }
 
     public void focus () {
@@ -91,6 +90,8 @@ public class Menu extends JPanel implements KeyListener {
         g.drawString("Start", 152, 344);
         g.drawString("Help", 152, 387);
         g.drawString("Quit", 152, 430);
+
+        System.out.println("U lose");
 
         g.setColor(Color.WHITE);
 

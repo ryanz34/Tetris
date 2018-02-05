@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-class piece{
+class Piece {
     // Raw blocks
     private Integer[][][] Z_STATES = {{{1, 1, 0},
             {0, 1, 1}},
@@ -74,7 +74,7 @@ class piece{
     public Integer[][][] pieceStates;
     public int blockType;
 
-    public piece() {
+    public Piece() {
         blockType = (int) (Math.random() * 7) + 1;
         pieceStates = states.get((int) (Math.random()*7));
         stateNum = (int) (Math.random()*pieceStates.length);

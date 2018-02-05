@@ -15,9 +15,10 @@ public class Main extends JFrame implements ActionListener {
 
     GamePanel game;
     Menu menu;
+    GameOver gameOver;
     Timer myTimer;
     boolean gameRunning = false;
-    String page = "menu";
+    public static String page = "menu";
 
     public Main() {
         super("Tetris");
@@ -43,6 +44,12 @@ public class Main extends JFrame implements ActionListener {
                 setVisible(true);
                 break;
 
+            case "gameOver":
+                gameOver = new GameOver(this);
+                add(gameOver);
+                setVisible(true);
+                break;
+
             case "game":
                 game = new GamePanel();
                 add(game);
@@ -63,10 +70,20 @@ public class Main extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent evt) {
         if (game != null) {
-            game.move();
-            game.repaint();
+            if (game.gameOver) {
+                this.getContentPane().remove(game);
+                //page = "gameOver";
+                page = "menu";
+                startGraphics();
+            }
+            else {
+                game.move();
+                game.repaint();
+            }
         } else if (menu != null) {
             menu.requestFocus();
+        } else if (gameOver != null) {
+            gameOver.requestFocus();
         }
     }
 
