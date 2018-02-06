@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class Main extends JFrame implements ActionListener {
+public class Main extends JFrame implements ActionListener, ComponentListener {
 
     GamePanel game;
     Menu menu;
@@ -19,18 +19,22 @@ public class Main extends JFrame implements ActionListener {
     Timer myTimer;
     boolean gameRunning = false;
     public static String page = "menu";
+    public static int w = 600;
+    public static int h = 600;
 
     public Main() {
         super("Tetris");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 600);
+        setSize(w, h);
+        setMinimumSize(new Dimension(600, 600));
         setLayout(new BorderLayout());
 
         myTimer = new Timer(50, this);//trigger 20 times per second
         myTimer.start();
 
+        getContentPane().addComponentListener(this);
         setVisible(true);
-        setResizable(false);
+        //setResizable(false);
 
         startGraphics();
 
@@ -66,6 +70,15 @@ public class Main extends JFrame implements ActionListener {
 
     public void exit() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
+    public void componentHidden(ComponentEvent ce) {};
+    public void componentShown(ComponentEvent ce) {};
+    public void componentMoved(ComponentEvent ce) {};
+    public void componentResized(ComponentEvent ce) {
+        w = getWidth();
+        h = getHeight();
+        System.out.println(w + " " + h);
     }
 
     public void actionPerformed(ActionEvent evt) {
