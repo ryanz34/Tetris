@@ -215,7 +215,6 @@ class GamePanel extends JPanel implements KeyListener {
             currentBoard.add(0, new Integer[]{100,0,0,0,0,0,0,0,0,100});
         }
 
-
         for (int yy = 0; yy < 19; yy++) {
             board[yy] = currentBoard.get(yy);
         }

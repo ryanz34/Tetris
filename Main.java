@@ -45,18 +45,21 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
             case "menu":
                 menu = new Menu(this);
                 add(menu);
+                menu.requestFocus();
                 setVisible(true);
                 break;
 
             case "gameOver":
                 gameOver = new GameOver(this);
                 add(gameOver);
+                gameOver.requestFocus();
                 setVisible(true);
                 break;
 
             case "game":
                 game = new GamePanel();
                 add(game);
+                game.requestFocus();
                 setVisible(true);
                 break;
         }
@@ -93,9 +96,11 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
                 game.move();
                 game.repaint();
             }
-        } else if (menu != null) {
+        }
+        if (menu != null) {
             menu.requestFocus();
-        } else if (gameOver != null) {
+        }
+        if (gameOver != null) {
             gameOver.requestFocus();
         }
     }
