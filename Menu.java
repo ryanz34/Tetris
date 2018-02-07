@@ -45,9 +45,6 @@ public class Menu extends JPanel implements KeyListener {
 
     }
 
-    public void focus () {
-        requestFocus();
-    }
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -55,6 +52,7 @@ public class Menu extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        System.out.println(selecter_option);
         if (e.getKeyCode() == e.VK_UP) {
             if (selecter_option > 0) {
                 selecter_option -= 1;
@@ -65,6 +63,7 @@ public class Menu extends JPanel implements KeyListener {
             }
         } else if (e.getKeyCode() == e.VK_ENTER) {
             if (selecter_option == 0) {
+                removeKeyListener(this);
                 parent.startgame();
             } else if (selecter_option == 2) {
                 parent.exit();

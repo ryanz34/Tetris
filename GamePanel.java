@@ -188,6 +188,8 @@ class GamePanel extends JPanel implements KeyListener {
         for (int xx = 1; xx < 9; xx++) {
             if (board[0][xx] != 0) {
                 gameOver = true;
+                removeKeyListener(this);
+                break;
             }
         }
 

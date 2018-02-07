@@ -43,32 +43,38 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
     public void startGraphics() {
         switch (page) {
             case "menu":
-                menu = new Menu(this);
-                add(menu);
-                menu.requestFocus();
-                setVisible(true);
+                if (menu == null) {
+                    menu = new Menu(this);
+                    add(menu);
+                    menu.requestFocus();
+                    setVisible(true);
+                }
                 break;
 
             case "gameOver":
-                gameOver = new GameOver(this);
-                add(gameOver);
-                gameOver.requestFocus();
-                setVisible(true);
+                if (gameOver == null) {
+                    gameOver = new GameOver(this);
+                    add(gameOver);
+                    gameOver.requestFocus();
+                    setVisible(true);
+                }
                 break;
 
             case "game":
-                game = new GamePanel();
-                add(game);
-                game.requestFocus();
-                setVisible(true);
+                if (game == null) {
+                    game = new GamePanel();
+                    add(game);
+                    game.requestFocus();
+                    setVisible(true);
+                }
                 break;
         }
     }
 
     public void startgame() {
         this.getContentPane().remove(menu);
+        menu = null;
         page = "game";
-        startGraphics();
     }
 
     public void exit() {
@@ -85,12 +91,11 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
     }
 
     public void actionPerformed(ActionEvent evt) {
+        startGraphics();
         if (game != null) {
             if (game.gameOver) {
                 this.getContentPane().remove(game);
-                //page = "gameOver";
-                page = "menu";
-                startGraphics();
+                page = "gameOver";
             }
             else {
                 game.move();
