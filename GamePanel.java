@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ class GamePanel extends JPanel implements KeyListener {
 
     private BufferedImage background;
     private HashMap<Integer, BufferedImage> blocks = new HashMap<>();
+    private int totalTick = 0;
+    private int ppm = 0;
 
     private boolean placed;
 
@@ -31,12 +34,18 @@ class GamePanel extends JPanel implements KeyListener {
     private int score = 0;
 
     private Piece currentPiece, nextPiece;
+    private Font gameFont;
 
     public GamePanel() {
         setSize(600, 600);
 
         // Load images
         try {
+            InputStream is = Menu.class.getResourceAsStream("data/PressStart2P.ttf");
+
+            Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+            gameFont = font.deriveFont(18f);
+
             background = ImageIO.read(new File("data/kremlin.png"));
             blocks.put(1, ImageIO.read(new File("data/bluebrick.png")));
             blocks.put(2, ImageIO.read(new File("data/greenbrick.png")));
@@ -143,7 +152,7 @@ class GamePanel extends JPanel implements KeyListener {
 
             currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
 
-            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board) || currentPiece.y + currentPiece.height() >= 18) {
                 currentPiece.stateNum = previous_state;
                 currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
             } else {
@@ -173,6 +182,8 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     private void placePiece () {
+        ppm = 60000 / (totalTick * 50);
+        totalTick = 0;
         for (int yy = 0; yy < currentPiece.height(); yy++) {
             for (int xx = 0; xx < currentPiece.width(); xx++) {
                 if (currentPiece.piece[yy][xx] == 1) {
@@ -227,6 +238,7 @@ class GamePanel extends JPanel implements KeyListener {
 
     public void move() {
         tick++;
+        totalTick++;
 
         requestFocus();
 
@@ -243,6 +255,9 @@ class GamePanel extends JPanel implements KeyListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        g.setFont(gameFont);
+
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.WHITE);
@@ -252,10 +267,14 @@ class GamePanel extends JPanel implements KeyListener {
         // Block Preview
 
         g.drawRoundRect(300, 0, 200, 200, 10, 10);
-        g.drawString("Next Piece", 320, 10);
+        g.drawString("Next Piece", 315, 25);
 
-        g.drawString("Score:", 300, 220);
-        g.drawString(Integer.toString(score), 300, 230);
+        g.drawString("Score:", 300, 225);
+        g.drawString(Integer.toString(score), 300, 245);
+
+        g.drawString("PPM: ",300, 275);
+        g.drawString(Integer.toString(ppm), 300, 295);
+
 
         int nextPieceX = 300 + 100 - nextPiece.width()*15;
         int nextPieceY = 100 - nextPiece.height()*15;
