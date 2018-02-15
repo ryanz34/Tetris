@@ -25,7 +25,7 @@ public class Menu extends JPanel implements KeyListener {
     private int selecter_option = 0;
 
     public Menu (Main parent){
-        setSize(600, 600);
+        setSize(Main.w, Main.h);
         this.parent = parent;
 
         InputStream is = Menu.class.getResourceAsStream("data/PressStart2P.ttf");
@@ -83,21 +83,21 @@ public class Menu extends JPanel implements KeyListener {
         super.paintComponent(g);
         g.setFont(menuFont);
 
-        g.drawImage(menuImage, 0, 0, 600, 600,null);
+        g.drawImage(menuImage, Main.ox, Main.oy, 600, 600,null);
 
         g.setColor(Color.BLACK);
 
-        g.drawString("Start", 152, 344);
-        g.drawString("Help", 152, 387);
-        g.drawString("Quit", 152, 430);
+        g.drawString("Start", Main.ox + 152, Main.oy + 344);
+        g.drawString("Help", Main.ox + 152, Main.oy + 387);
+        g.drawString("Quit", Main.ox + 152, Main.oy + 430);
 
         g.setColor(Color.WHITE);
 
-        g.drawString("Start", 150, 342);
-        g.drawString("Help", 150, 385);
-        g.drawString("Quit", 150, 428);
+        g.drawString("Start", Main.ox + 150, Main.oy + 342);
+        g.drawString("Help", Main.ox + 150, Main.oy + 385);
+        g.drawString("Quit", Main.ox + 150, Main.oy + 428);
 
-        g.drawImage(selecter, 100, 317 + 43 * selecter_option, selecter.getWidth(), selecter.getHeight(), null);
+        g.drawImage(selecter, Main.ox + 100, Main.oy + 317 + 43 * selecter_option, selecter.getWidth(), selecter.getHeight(), null);
 
     }
 

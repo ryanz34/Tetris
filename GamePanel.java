@@ -37,7 +37,7 @@ class GamePanel extends JPanel implements KeyListener {
     private Font gameFont;
 
     public GamePanel() {
-        setSize(600, 600);
+        setSize(Main.w, Main.h);
 
         // Load images
         try {
@@ -266,15 +266,14 @@ class GamePanel extends JPanel implements KeyListener {
 
         // Block Preview
 
-        g.drawRoundRect(300, 0, 200, 200, 10, 10);
-        g.drawString("Next Piece", 315, 25);
-
-        g.drawString("Score:", 300, 225);
-        g.drawString(Integer.toString(score), 300, 245);
+        g.drawRoundRect(Main.ox + 300, Main.oy + 0, 200, 200, 10, 10);
+        g.drawString("Next Piece", Main.ox + 320, Main.oy + 10);
 
         g.drawString("PPM: ",300, 275);
         g.drawString(Integer.toString(ppm), 300, 295);
 
+        g.drawString("Score:", Main.ox + 300, Main.oy + 220);
+        g.drawString(Integer.toString(score), Main.ox + 300, Main.oy + 230);
 
         int nextPieceX = 300 + 100 - nextPiece.width()*15;
         int nextPieceY = 100 - nextPiece.height()*15;
@@ -282,7 +281,7 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < nextPiece.height(); yy++) {
             for (int xx = 0; xx < nextPiece.width(); xx++) {
                 if (nextPiece.piece[yy][xx] == 1) {
-                    g.drawImage(blocks.get(nextPiece.blockType), xx*30 + nextPieceX, yy*30 + nextPieceY, 30, 30, null);
+                    g.drawImage(blocks.get(nextPiece.blockType), Main.ox + xx*30 + nextPieceX, Main.oy + yy*30 + nextPieceY, 30, 30, null);
                 }
             }
         }
@@ -291,8 +290,8 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < currentPiece.height(); yy++) {
             for (int xx = 0; xx < currentPiece.width(); xx++) {
                 if (currentPiece.piece[yy][xx] != 0) {
-                    g.fillRect((currentPiece.x+xx)*30, (yPreview +yy)*30, 30, 30);
-                    g.drawImage(blocks.get(currentPiece.blockType), (currentPiece.x+xx)*30, (currentPiece.y+yy)*30, 30, 30, null);
+                    g.fillRect(Main.ox + (currentPiece.x+xx)*30, Main.oy + (yPreview +yy)*30, 30, 30);
+                    g.drawImage(blocks.get(currentPiece.blockType), Main.ox + (currentPiece.x+xx)*30, Main.oy + (currentPiece.y+yy)*30, 30, 30, null);
                 }
             }
         }
@@ -301,7 +300,7 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < 19; yy++) {
             for (int xx = 0; xx < 10; xx++) {
                 if (!board[yy][xx].equals(0)) {
-                    g.drawImage(blocks.get(board[yy][xx]), xx*30, yy*30, 30, 30, null);
+                    g.drawImage(blocks.get(board[yy][xx]), Main.ox + xx*30, Main.oy + yy*30, 30, 30, null);
                 }
             }
         }
