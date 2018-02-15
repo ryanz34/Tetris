@@ -21,6 +21,8 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
     public static String page = "menu";
     public static int w = 600;
     public static int h = 600;
+    public static int ox = 0;
+    public static int oy = 0;
 
     public Main() {
         super("Tetris");
@@ -87,7 +89,20 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
     public void componentResized(ComponentEvent ce) {
         w = getWidth();
         h = getHeight();
+        ox = (w - 600) / 2;
+        oy = (h - 600) / 2;
         System.out.println(w + " " + h);
+
+        if (game != null) {
+            game.repaint();
+        }
+        if (menu != null) {
+            menu.repaint();
+        }
+        if (gameOver != null) {
+            gameOver.repaint();
+        }
+
     }
 
     public void actionPerformed(ActionEvent evt) {
