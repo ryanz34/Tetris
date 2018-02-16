@@ -1,20 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class Main extends JFrame implements ActionListener, ComponentListener {
 
     GamePanel game;
     Menu menu;
+    Help help;
     GameOver gameOver;
     Timer myTimer;
     boolean gameRunning = false;
@@ -53,6 +45,15 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
                 }
                 break;
 
+            case "help":
+                if (help == null) {
+                    help = new Help(this);
+                    add(help);
+                    help.requestFocus();
+                    setVisible(true);
+                }
+                break;
+
             case "gameOver":
                 if (gameOver == null) {
                     gameOver = new GameOver(this);
@@ -73,7 +74,19 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         }
     }
 
-    public void startgame() {
+    public void startMenuFromHelp() {
+        this.getContentPane().remove(help);
+        help = null;
+        page = "menu";
+    }
+
+    public void startHelp() {
+        this.getContentPane().remove(menu);
+        menu = null;
+        page = "help";
+    }
+
+    public void startGame() {
         this.getContentPane().remove(menu);
         menu = null;
         page = "game";
@@ -93,6 +106,9 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         oy = (h - 600) / 2;
         System.out.println(w + " " + h);
 
+        if (help != null) {
+            help.repaint();
+        }
         if (game != null) {
             game.repaint();
         }
@@ -122,6 +138,8 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         }
         if (gameOver != null) {
             gameOver.requestFocus();
+        } if (help != null) {
+            help.repaint();
         }
     }
 

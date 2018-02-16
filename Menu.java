@@ -1,19 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class Menu extends JPanel implements KeyListener {
 
@@ -28,7 +19,7 @@ public class Menu extends JPanel implements KeyListener {
         setSize(Main.w, Main.h);
         this.parent = parent;
 
-        InputStream is = Menu.class.getResourceAsStream("data/PressStart2P.ttf");
+        InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
             this.menuFont = font.deriveFont(20f);
@@ -56,21 +47,26 @@ public class Menu extends JPanel implements KeyListener {
         if (e.getKeyCode() == e.VK_UP) {
             if (selecter_option > 0) {
                 selecter_option -= 1;
+                repaint();
             }
         } else if (e.getKeyCode() == e.VK_DOWN) {
             if (selecter_option < 2) {
                 selecter_option += 1;
+                repaint();
             }
         } else if (e.getKeyCode() == e.VK_ENTER) {
             if (selecter_option == 0) {
                 removeKeyListener(this);
-                parent.startgame();
+                parent.startGame();
+            }
+            else if (selecter_option == 1) {
+                removeKeyListener(this);
+                parent.startHelp();
+
             } else if (selecter_option == 2) {
                 parent.exit();
             }
         }
-
-        repaint();
     }
 
     @Override

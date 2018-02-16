@@ -41,7 +41,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         // Load images
         try {
-            InputStream is = Menu.class.getResourceAsStream("data/PressStart2P.ttf");
+            InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");
 
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
             gameFont = font.deriveFont(18f);
@@ -259,7 +259,7 @@ class GamePanel extends JPanel implements KeyListener {
         g.setFont(gameFont);
 
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.fillRect(Main.ox, Main.oy, 600, 600);
         g.setColor(Color.WHITE);
 
         //g.drawImage(background, 0, 0, null);

@@ -1,19 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class GameOver extends JPanel implements KeyListener {
 
@@ -64,7 +55,7 @@ public class GameOver extends JPanel implements KeyListener {
             }
         } else if (e.getKeyCode() == e.VK_ENTER) {
             if (selecter_option == 0) {
-                parent.startgame();
+                parent.startGame();
             } else if (selecter_option == 2) {
                 parent.exit();
             }
