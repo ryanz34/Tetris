@@ -34,17 +34,21 @@ class GamePanel extends JPanel implements KeyListener {
     private int score = 0;
 
     private Piece currentPiece, nextPiece;
-    private Font gameFont;
+    private Font gameFont, gameOverFont;
+    private boolean pause = false;
+    private Main parent;
 
-    public GamePanel() {
+    public GamePanel(Main parent) {
         setSize(Main.w, Main.h);
+        this.parent = parent;
 
         // Load images
         try {
-            InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");
+            InputStream is = GamePanel.class.getResourceAsStream("data/PressStart2P.ttf");
 
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
             gameFont = font.deriveFont(18f);
+            gameOverFont = font.deriveFont(30f);
 
             background = ImageIO.read(new File("data/kremlin.png"));
             blocks.put(1, ImageIO.read(new File("data/bluebrick.png")));
@@ -121,57 +125,71 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e) {
-        int previous_state = currentPiece.stateNum;
+        System.out.println(e.getKeyCode());
+        if (!pause && !gameOver) {
+            if (e.getKeyCode() == e.VK_LEFT) {
+                currentPiece.x -= 1;
+                if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                    currentPiece.x++;
+                } else {
+                    repaint();
+                }
 
-        if (e.getKeyCode() == e.VK_LEFT) {
-            currentPiece.x -= 1;
-            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
-                currentPiece.x++;
-            } else {
-                repaint();
-            }
+                previewUpdate();
 
-            previewUpdate();
+            } else if (e.getKeyCode() == e.VK_RIGHT) {
+                currentPiece.x += 1;
 
-        } else if (e.getKeyCode() == e.VK_RIGHT) {
-            currentPiece.x+= 1;
+                if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                    currentPiece.x--;
+                } else {
+                    repaint();
+                }
 
-            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
-                currentPiece.x--;
-            } else {
-                repaint();
-            }
+                previewUpdate();
 
-            previewUpdate();
+            } else if (e.getKeyCode() == e.VK_UP) {
+                int previous_state = currentPiece.stateNum;
+                currentPiece.stateNum++;
+                if (currentPiece.stateNum == currentPiece.pieceStates.length) {
+                    currentPiece.stateNum = 0;
+                }
 
-        } else if (e.getKeyCode() == e.VK_UP) {
-            currentPiece.stateNum ++;
-            if (currentPiece.stateNum == currentPiece.pieceStates.length) {
-                currentPiece.stateNum = 0;
-            }
-
-            currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
-
-            if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board) || currentPiece.y + currentPiece.height() >= 18) {
-                currentPiece.stateNum = previous_state;
                 currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
-            } else {
+
+                if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board) || currentPiece.y + currentPiece.height() >= 18) {
+                    currentPiece.stateNum = previous_state;
+                    currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
+                } else {
+                    repaint();
+                }
+
+                previewUpdate();
+
+            } else if (e.getKeyCode() == e.VK_SPACE) {
+                placed = false;
+                int currenttick = totalTick;
+                while (!placed) {
+                    move();
+                }
+
+                ppm = 60000 / (currenttick * 15);
+
+                previewUpdate();
+
                 repaint();
+            } else if (e.getKeyCode() == e.VK_DOWN) {
+                fastDrop = true;
             }
-
-            previewUpdate();
-
-        } else if (e.getKeyCode() == e.VK_SPACE) {
-            placed = false;
-            while (!placed) {
-                move();
+        }
+        if (e.getKeyCode() == e.VK_ESCAPE) {
+            if (gameOver) {
+                removeKeyListener(this);
+                parent.gameOver();
+                System.out.println("ga");
+            } else {
+                pause = !pause;
             }
-
-            previewUpdate();
-
-            repaint();
-        } else if (e.getKeyCode() == e.VK_DOWN) {
-            fastDrop = true;
         }
     }
 
@@ -182,7 +200,7 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     private void placePiece () {
-        ppm = 60000 / (totalTick * 50);
+        ppm = 60000 / (totalTick * 15);
         totalTick = 0;
         for (int yy = 0; yy < currentPiece.height(); yy++) {
             for (int xx = 0; xx < currentPiece.width(); xx++) {
@@ -199,7 +217,6 @@ class GamePanel extends JPanel implements KeyListener {
         for (int xx = 1; xx < 9; xx++) {
             if (board[0][xx] != 0) {
                 gameOver = true;
-                removeKeyListener(this);
                 break;
             }
         }
@@ -237,18 +254,20 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     public void move() {
-        tick++;
-        totalTick++;
-
         requestFocus();
 
-        if (tick >= (int) speed || fastDrop) {
-            tick = Math.max(0, tick - (int) speed);
-            currentPiece.y += 1;
+        if (!pause && !gameOver) {
+            tick++;
+            totalTick++;
 
-            if (currentPiece.y + currentPiece.height() > 19 || arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
-                currentPiece.y--;
-                placePiece();
+            if (tick >= (int) speed || fastDrop) {
+                tick = Math.max(0, tick - (int) speed);
+                currentPiece.y += 1;
+
+                if (currentPiece.y + currentPiece.height() > 19 || arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                    currentPiece.y--;
+                    placePiece();
+                }
             }
         }
     }
@@ -266,14 +285,14 @@ class GamePanel extends JPanel implements KeyListener {
 
         // Block Preview
 
-        g.drawRoundRect(Main.ox + 300, Main.oy + 0, 200, 200, 10, 10);
-        g.drawString("Next Piece", Main.ox + 320, Main.oy + 10);
+        g.drawRoundRect(Main.ox + 300, Main.oy, 200, 200, 10, 10);
+        g.drawString("Next Piece", Main.ox + 310, Main.oy + 30);
 
-        g.drawString("PPM: ",300, 275);
+        g.drawString("PPM: ",Main.ox + 300, Main.oy + 275);
         g.drawString(Integer.toString(ppm), 300, 295);
 
-        g.drawString("Score:", Main.ox + 300, Main.oy + 220);
-        g.drawString(Integer.toString(score), Main.ox + 300, Main.oy + 230);
+        g.drawString("Score:", Main.ox + 300, Main.oy + 225);
+        g.drawString(Integer.toString(score), Main.ox + 300, Main.oy + 250);
 
         int nextPieceX = 300 + 100 - nextPiece.width()*15;
         int nextPieceY = 100 - nextPiece.height()*15;
@@ -303,6 +322,15 @@ class GamePanel extends JPanel implements KeyListener {
                     g.drawImage(blocks.get(board[yy][xx]), Main.ox + xx*30, Main.oy + yy*30, 30, 30, null);
                 }
             }
+        }
+
+        if (pause) {
+            g.drawString("PAUSED", Main.ox + 90, Main.oy + 300);
+        }
+
+        if (gameOver) {
+            g.setFont(gameOverFont);
+            g.drawString("GAME OVER", Main.ox + 20, Main.oy + 300);
         }
     }
 }

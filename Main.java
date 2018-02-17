@@ -65,7 +65,7 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
 
             case "game":
                 if (game == null) {
-                    game = new GamePanel();
+                    game = new GamePanel(this);
                     add(game);
                     game.requestFocus();
                     setVisible(true);
@@ -90,6 +90,13 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         this.getContentPane().remove(menu);
         menu = null;
         page = "game";
+    }
+
+    public void gameOver() {
+        System.out.println("a");
+        this.getContentPane().remove(game);
+        game = null;
+        page = "menu";
     }
 
     public void exit() {
@@ -124,14 +131,8 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
     public void actionPerformed(ActionEvent evt) {
         startGraphics();
         if (game != null) {
-            if (game.gameOver) {
-                this.getContentPane().remove(game);
-                page = "gameOver";
-            }
-            else {
-                game.move();
-                game.repaint();
-            }
+            game.move();
+            game.repaint();
         }
         if (menu != null) {
             menu.requestFocus();
