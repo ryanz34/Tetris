@@ -22,6 +22,7 @@ class GamePanel extends JPanel implements KeyListener {
 
     private BufferedImage background;
     private HashMap<Integer, BufferedImage> blocks = new HashMap<>();
+    private HashMap<Integer, BufferedImage> blocksPreview = new HashMap<>();
     private int totalTick = 0;
     private int ppm = 0;
 
@@ -60,12 +61,13 @@ class GamePanel extends JPanel implements KeyListener {
             blocks.put(7, ImageIO.read(new File("data/yellowbrick.png")));
             blocks.put(100, ImageIO.read(new File("data/graybrick.png")));
 
-            // Sketchy audio loading
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource("soviet.wav"));
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioIn);
-            clip.start();
-
+            blocksPreview.put(1, ImageIO.read(new File("data/bluebrickpreview.png")));
+            blocksPreview.put(2, ImageIO.read(new File("data/greenbrickpreview.png")));
+            blocksPreview.put(3, ImageIO.read(new File("data/orangebrickpreview.png")));
+            blocksPreview.put(4, ImageIO.read(new File("data/purplebrickpreview.png")));
+            blocksPreview.put(5, ImageIO.read(new File("data/redbrickpreview.png")));
+            blocksPreview.put(6, ImageIO.read(new File("data/tealbrickpreview.png")));
+            blocksPreview.put(7, ImageIO.read(new File("data/yellowbrickpreview.png")));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -309,7 +311,7 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < currentPiece.height(); yy++) {
             for (int xx = 0; xx < currentPiece.width(); xx++) {
                 if (currentPiece.piece[yy][xx] != 0) {
-                    g.fillRect(Main.ox + (currentPiece.x+xx)*30, Main.oy + (yPreview +yy)*30, 30, 30);
+                    g.drawImage(blocksPreview.get(currentPiece.blockType),Main.ox + (currentPiece.x+xx)*30, Main.oy + (yPreview +yy)*30, 30, 30, null);
                     g.drawImage(blocks.get(currentPiece.blockType), Main.ox + (currentPiece.x+xx)*30, Main.oy + (currentPiece.y+yy)*30, 30, 30, null);
                 }
             }
@@ -322,6 +324,10 @@ class GamePanel extends JPanel implements KeyListener {
                     g.drawImage(blocks.get(board[yy][xx]), Main.ox + xx*30, Main.oy + yy*30, 30, 30, null);
                 }
             }
+        }
+
+        for (int xx = 0; xx < 10; xx++) {
+            g.drawImage(blocks.get(100), Main.ox + xx*30, Main.oy + 19*30, 30, 30, null);
         }
 
         if (pause) {

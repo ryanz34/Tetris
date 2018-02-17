@@ -1,5 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 public class Main extends JFrame implements ActionListener, ComponentListener {
@@ -31,6 +34,18 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         //setResizable(false);
 
         startGraphics();
+
+        try {
+            // Sketchy audio loading
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource("soviet.wav"));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start();
+            clip.loop(clip.LOOP_CONTINUOUSLY);
+        }
+        catch (Exception e) {
+
+        }
 
     }
 
@@ -145,6 +160,7 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
     }
 
     public static void main(String[] arguments) {
+
         Main frame = new Main();
     }
 }
