@@ -9,8 +9,6 @@ import java.io.InputStream;
 public class Help extends JPanel implements KeyListener {
 
     private Main parent;
-    private BufferedImage helpImage;
-    private BufferedImage selecter;
     private Font menuFont;
 
     public Help(Main parent){
@@ -20,10 +18,7 @@ public class Help extends JPanel implements KeyListener {
         InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-            this.menuFont = font.deriveFont(20f);
-
-            helpImage = ImageIO.read(new File("data/kremlin.png"));
-            selecter = ImageIO.read(new File("data/menu/selecter.png"));
+            this.menuFont = font.deriveFont(15f);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,10 +37,7 @@ public class Help extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        if (e.getKeyCode() == e.VK_ENTER) {
-            parent.startMenuFromHelp();
-        }
-
+        parent.startMenuFromHelp();
         repaint();
     }
 
@@ -59,21 +51,22 @@ public class Help extends JPanel implements KeyListener {
         super.paintComponent(g);
         g.setFont(menuFont);
 
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.fillRect(Main.ox, Main.oy, 600, 600);
 
-        g.drawImage(helpImage, Main.ox, Main.oy, 600, 600,null);
-
-        g.setColor(Color.BLACK);
-
-        g.drawString("Back", Main.ox + 152, Main.oy + 430);
-
         g.setColor(Color.WHITE);
-
-        g.drawString("Back", Main.ox + 150, Main.oy + 428);
-
-        g.drawImage(selecter, Main.ox + 100, Main.oy + 403, selecter.getWidth(), selecter.getHeight(), null);
-
+        g.drawString("~How 2 play tetris~", Main.ox + 30, Main.oy + 90);
+        g.drawString("K so basically u have to get the bar", Main.ox + 30, Main.oy + 120);
+        g.drawString("things 2 like line up and wreck 360", Main.ox + 30, Main.oy + 150);
+        g.drawString("no scope each other and lik the", Main.ox + 30, Main.oy + 180);
+        g.drawString("beats drop xxponentially ya", Main.ox + 30, Main.oy + 210);
+        g.drawString("u can press anything to continue", Main.ox + 30, Main.oy + 270);
+        g.drawString("RASTERA DEV | rastera.xyz", Main.ox + 30, Main.oy + 370);
+        g.drawString("(C) 2018 under WTFPL", Main.ox + 30, Main.oy + 400);
+        g.drawString("Notice: This project was basically", Main.ox + 30, Main.oy + 460);
+        g.drawString("        made in 15 mins because we", Main.ox + 30, Main.oy + 490);
+        g.drawString("        worked on MasseyHacks IV", Main.ox + 30, Main.oy + 520);
+        g.drawString("        stuff in class :^)", Main.ox + 30, Main.oy + 550);
     }
 
 }

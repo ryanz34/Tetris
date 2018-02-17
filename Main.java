@@ -4,6 +4,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
+import java.util.Random;
 
 public class Main extends JFrame implements ActionListener, ComponentListener {
 
@@ -23,7 +24,7 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         super("Tetris");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(w, h);
-        setMinimumSize(new Dimension(600, 600));
+        setMinimumSize(new Dimension(600, 630));
         setLayout(new BorderLayout());
 
         myTimer = new Timer(50, this);//trigger 20 times per second
@@ -35,9 +36,11 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
 
         startGraphics();
 
+        Random r = new Random();
+
         try {
             // Sketchy audio loading
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource("soviet.wav"));
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource(r.nextBoolean() ? "soviet.wav" : "tetris.wav"));
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
@@ -125,7 +128,7 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         w = getWidth();
         h = getHeight();
         ox = (w - 600) / 2;
-        oy = (h - 600) / 2;
+        oy = (h - 630) / 2;
         System.out.println(w + " " + h);
 
         if (help != null) {

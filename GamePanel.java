@@ -291,7 +291,7 @@ class GamePanel extends JPanel implements KeyListener {
         g.drawString("Next Piece", Main.ox + 310, Main.oy + 30);
 
         g.drawString("PPM: ",Main.ox + 300, Main.oy + 275);
-        g.drawString(Integer.toString(ppm), 300, 295);
+        g.drawString(Integer.toString(ppm), Main.ox + 300, Main.oy + 295);
 
         g.drawString("Score:", Main.ox + 300, Main.oy + 225);
         g.drawString(Integer.toString(score), Main.ox + 300, Main.oy + 250);
@@ -331,10 +331,12 @@ class GamePanel extends JPanel implements KeyListener {
         }
 
         if (pause) {
+
             g.drawString("PAUSED", Main.ox + 90, Main.oy + 300);
         }
 
         if (gameOver) {
+
             g.setFont(gameOverFont);
             g.drawString("GAME OVER", Main.ox + 20, Main.oy + 300);
         }
