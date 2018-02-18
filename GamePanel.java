@@ -298,9 +298,15 @@ class GamePanel extends JPanel implements KeyListener {
 
         g.setFont(gameFont);  // Setting the font
 
-        g.setColor(Color.BLACK);
-        g.fillRect(Main.ox, Main.oy, 600, 600); // Clear screen
         g.setColor(Color.WHITE);
+        g.fillRect(Main.ox, Main.oy, 600, 600);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(Main.ox + 4, Main.oy + 4, 592, 592);
+
+        g.setColor(Color.WHITE);
+
+        g.fillRect(Main.ox + 300, Main.oy, 4, 600);
 
         // Block Preview
 
