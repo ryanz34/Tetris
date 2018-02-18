@@ -65,6 +65,7 @@ public class Help extends JPanel implements KeyListener {
         g.drawString("no scope each other and lik the", Main.ox + 30, Main.oy + 180);
         g.drawString("beats drop xxponentially ya", Main.ox + 30, Main.oy + 210);
         g.drawString("u can press anything to continue", Main.ox + 30, Main.oy + 270);
+        g.drawString("Ryan Zhang && Henry Tu", Main.ox + 30, Main.oy + 340);
         g.drawString("RASTERA DEV | rastera.xyz", Main.ox + 30, Main.oy + 370);
         g.drawString("(C) 2018 under WTFPL", Main.ox + 30, Main.oy + 400);
         g.drawString("Notice: This project was basically", Main.ox + 30, Main.oy + 460);

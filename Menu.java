@@ -6,11 +6,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 
+import static java.lang.Math.max;
+
 public class Menu extends JPanel implements KeyListener {
 
     private Main parent;  // The JFrame which this Menu was created by
     private BufferedImage menuImage; // The images that the menu will use
     private BufferedImage selecter; // A selector
+    private BufferedImage background;  // Loading the images
     private Font menuFont;  // The 8-bit font
 
     private int selecter_option = 0;  // The location where the selector is on
@@ -23,7 +26,7 @@ public class Menu extends JPanel implements KeyListener {
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is); // Creating a font
             this.menuFont = font.deriveFont(20f);  // Deriving the font we just created because it has a size of 0
-
+            background = ImageIO.read(new File("data/propaganda.png"));
             menuImage = ImageIO.read(new File("data/menu/menu.png"));  // Loading the images using imageIO
             selecter = ImageIO.read(new File("data/menu/selecter.png"));
         } catch (Exception e) {
@@ -77,6 +80,7 @@ public class Menu extends JPanel implements KeyListener {
         super.paintComponent(g);
         g.setFont(menuFont);  // Setting the current font
 
+        g.drawImage(background, 0, 0, max(Main.w, Main.h), max(Main.w, Main.h), this);  // Draws the background
         g.drawImage(menuImage, Main.ox, Main.oy, 600, 600, this);
 
         g.setColor(Color.BLACK);
