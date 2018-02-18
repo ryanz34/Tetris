@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static java.lang.Math.max;
+
 class GamePanel extends JPanel implements KeyListener {
 
     // Clock stuff
@@ -53,7 +55,7 @@ class GamePanel extends JPanel implements KeyListener {
             contFont = font.deriveFont(12f);
             gameOverFont = font.deriveFont(30f);
 
-            background = ImageIO.read(new File("data/kremlin.png"));
+            background = ImageIO.read(new File("data/propaganda.png"));
             blocks.put(1, ImageIO.read(new File("data/bluebrick.png")));
             blocks.put(2, ImageIO.read(new File("data/greenbrick.png")));
             blocks.put(3, ImageIO.read(new File("data/orangebrick.png")));
@@ -191,13 +193,12 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
         if (e.getKeyCode() == e.VK_ESCAPE) {
-            if (gameOver) {
-                removeKeyListener(this);
-                parent.gameOver();
-                System.out.println("ga");
-            } else {
-                pause = !pause;
-            }
+            pause = !pause;
+        }
+        if (gameOver) {
+            removeKeyListener(this);
+            parent.gameOver();
+            System.out.println("ga");
         }
     }
 
@@ -285,6 +286,8 @@ class GamePanel extends JPanel implements KeyListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        g.drawImage(background, 0, 0, max(Main.w, Main.h), max(Main.w, Main.h), null);
+
         g.setFont(gameFont);
 
         g.setColor(Color.BLACK);
@@ -336,6 +339,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         for (int xx = 0; xx < 10; xx++) {
             g.drawImage(blocks.get(100), Main.ox + xx*30, Main.oy + 19*30, 30, 30, null);
+            g.drawImage(blocks.get(100), Main.ox + xx*30, Main.oy, 30, 30, null);
         }
 
         if (pause) {

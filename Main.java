@@ -40,7 +40,7 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
 
         try {
             // Sketchy audio loading
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource(r.nextBoolean() ? "soviet.wav" : "tetris.wav"));
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResource(r.nextBoolean() ? "data/soviet.wav" : "data/tetris.wav"));
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
