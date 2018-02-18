@@ -159,25 +159,29 @@ class GamePanel extends JPanel implements KeyListener {
                     currentPiece.stateNum = 0;
                 }
 
-                currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
-
-                if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board) || currentPiece.y + currentPiece.height() >= 18) {
-                    currentPiece.stateNum = previous_state;
+                if (currentPiece.y + currentPiece.pieceStates[currentPiece.stateNum].length <= 18) {
                     currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
+
+                    if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {
+                        currentPiece.stateNum = previous_state;
+                        currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
+                    } else {
+                        repaint();
+                    }
                 } else {
-                    repaint();
+                    currentPiece.stateNum = previous_state;
                 }
 
                 previewUpdate();
 
             } else if (e.getKeyCode() == e.VK_SPACE) {
                 placed = false;
-                int currenttick = totalTick;
+                int currentTick = totalTick;
                 while (!placed) {
                     move();
                 }
 
-                ppm = 60000 / (currenttick * 15);
+                ppm = 60000 / (currentTick * 15);
 
                 previewUpdate();
 
