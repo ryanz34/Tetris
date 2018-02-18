@@ -35,9 +35,10 @@ class GamePanel extends JPanel implements KeyListener {
     private int score = 0;
 
     private Piece currentPiece, nextPiece;
-    private Font gameFont, gameOverFont;
+    private Font gameFont, gameOverFont, contFont;
     private boolean pause = false;
     private Main parent;
+    private int gameOverTick = 0;
 
     public GamePanel(Main parent) {
         setSize(Main.w, Main.h);
@@ -49,6 +50,7 @@ class GamePanel extends JPanel implements KeyListener {
 
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);
             gameFont = font.deriveFont(18f);
+            contFont = font.deriveFont(12f);
             gameOverFont = font.deriveFont(30f);
 
             background = ImageIO.read(new File("data/kremlin.png"));
@@ -271,6 +273,8 @@ class GamePanel extends JPanel implements KeyListener {
                     placePiece();
                 }
             }
+        } else if (gameOver) {
+            gameOverTick++;
         }
     }
 
@@ -331,14 +335,20 @@ class GamePanel extends JPanel implements KeyListener {
         }
 
         if (pause) {
-
             g.drawString("PAUSED", Main.ox + 90, Main.oy + 300);
         }
 
         if (gameOver) {
+            if (gameOverTick >= 30) {
+                g.setFont(contFont);
+                g.drawString("Press ESCAPE to continue!", Main.ox + 5, Main.oy + 500);
+            }
 
+            if (gameOverTick >= 60) {
+                gameOverTick = 0;
+            }
             g.setFont(gameOverFont);
-            g.drawString("GAME OVER", Main.ox + 20, Main.oy + 300);
+            g.drawString("GAME OVER", Main.ox + 15, Main.oy + 300);
         }
     }
 }
