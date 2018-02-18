@@ -349,7 +349,7 @@ class GamePanel extends JPanel implements KeyListener {
         if (gameOver) {
             if (gameOverTick >= 30) {
                 g.setFont(contFont);
-                g.drawString("Press ESCAPE to continue!", Main.ox + 5, Main.oy + 500);
+                g.drawString("Press any key to continue!", Main.ox + 5, Main.oy + 500);
             }
 
             if (gameOverTick >= 60) {
