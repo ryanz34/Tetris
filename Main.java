@@ -45,8 +45,7 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
             clip.open(audioIn);
             clip.start();
             clip.loop(clip.LOOP_CONTINUOUSLY);  // Looping the sound continuously
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
         }
 
@@ -111,9 +110,21 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Dispatches an event that simulates a user clicking the x button
     }
 
-    public void componentHidden(ComponentEvent ce) {};
-    public void componentShown(ComponentEvent ce) {};
-    public void componentMoved(ComponentEvent ce) {};
+    public void componentHidden(ComponentEvent ce) {
+    }
+
+    ;
+
+    public void componentShown(ComponentEvent ce) {
+    }
+
+    ;
+
+    public void componentMoved(ComponentEvent ce) {
+    }
+
+    ;
+
     public void componentResized(ComponentEvent ce) {  // Listens for when the component resize
         w = getWidth();  // Sets the vars to the correct value and calculates the offset
         h = getHeight();

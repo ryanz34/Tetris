@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 /**
  * Help class
- *
+ * <p>
  * A copy of the Menu class that display the help screen
  */
 public class Help extends JPanel implements KeyListener {
@@ -16,7 +16,7 @@ public class Help extends JPanel implements KeyListener {
     private Main parent;
     private Font menuFont;
 
-    public Help(Main parent){
+    public Help(Main parent) {
         setSize(Main.w, Main.h);
         this.parent = parent;
 

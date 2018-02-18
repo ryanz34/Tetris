@@ -15,7 +15,7 @@ public class Menu extends JPanel implements KeyListener {
 
     private int selecter_option = 0;  // The location where the selector is on
 
-    public Menu (Main parent){
+    public Menu(Main parent) {
         setSize(Main.w, Main.h);
         this.parent = parent;
 
@@ -57,8 +57,7 @@ public class Menu extends JPanel implements KeyListener {
             if (selecter_option == 0) {  // Start game
                 removeKeyListener(this);  // Removes the keylistener so we will trigger the right Panel
                 parent.startGame();  // Starting the game
-            }
-            else if (selecter_option == 1) {
+            } else if (selecter_option == 1) {
                 removeKeyListener(this);
                 parent.startHelp();
 
@@ -78,7 +77,7 @@ public class Menu extends JPanel implements KeyListener {
         super.paintComponent(g);
         g.setFont(menuFont);  // Setting the current font
 
-        g.drawImage(menuImage, Main.ox, Main.oy, 600, 600,this);
+        g.drawImage(menuImage, Main.ox, Main.oy, 600, 600, this);
 
         g.setColor(Color.BLACK);
 

@@ -107,8 +107,7 @@ class GamePanel extends JPanel implements KeyListener {
         for (int ypp = currentPiece.y; ypp < 20; ypp++) {  // Increase the y until it intersects
             if (ypp + currentPiece.height() < 20 && !arrayIntersect(currentPiece.x, ypp, currentPiece, board)) { // Testing if it intersects
                 yPreview = ypp; // Setting the preview y to the right height
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -117,10 +116,10 @@ class GamePanel extends JPanel implements KeyListener {
     /**
      * Check for collision using two arrays
      *
-     * @param x int the x of the current piece
-     * @param y int the y of the current piece
+     * @param x          int the x of the current piece
+     * @param y          int the y of the current piece
      * @param checkPiece Piece the current piece or the piece u want to check
-     * @param board Integer[][] The current board
+     * @param board      Integer[][] The current board
      * @return boolean of whether it intersects
      */
     private boolean arrayIntersect(int x, int y, Piece checkPiece, Integer[][] board) {
@@ -129,7 +128,7 @@ class GamePanel extends JPanel implements KeyListener {
                 if (xx > 9 || yy > 19) {
                     return true;
 
-                } else if (checkPiece.piece[yy][xx] != 0 && board[yy+y][xx+x] != 0) {
+                } else if (checkPiece.piece[yy][xx] != 0 && board[yy + y][xx + x] != 0) {
                     return true;
                 }
             }
@@ -217,14 +216,14 @@ class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-    private void placePiece () {
+    private void placePiece() {
         ppm = 60000 / (totalTick * 15);  // Calculate ppm
         totalTick = 0;  // Reset total tick
 
         for (int yy = 0; yy < currentPiece.height(); yy++) {  // Placing the block by looping through and setting setting the piece on the board
             for (int xx = 0; xx < currentPiece.width(); xx++) {
                 if (currentPiece.piece[yy][xx] == 1) {
-                    board[currentPiece.y+yy][currentPiece.x+xx] = currentPiece.blockType;
+                    board[currentPiece.y + yy][currentPiece.x + xx] = currentPiece.blockType;
                 }
             }
         }
@@ -254,13 +253,13 @@ class GamePanel extends JPanel implements KeyListener {
 
             if (isFull) {  // if it is full
                 speed = 8 * Math.pow(0.99, score);  // Adjust speed
-                score ++;  // Increase score
+                score++;  // Increase score
                 currentBoard.remove(i);  // Remove the row of blocks
             }
         }
 
         while (currentBoard.size() != 19) {  // Add new rows to the front of the arrayList
-            currentBoard.add(0, new Integer[]{100,0,0,0,0,0,0,0,0,100});
+            currentBoard.add(0, new Integer[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 100});
         }
 
         for (int yy = 0; yy < 19; yy++) {  // Putting the board back
@@ -308,19 +307,19 @@ class GamePanel extends JPanel implements KeyListener {
         g.drawRoundRect(Main.ox + 300, Main.oy, 200, 200, 10, 10);  // Drawing the texts
         g.drawString("Next Piece", Main.ox + 310, Main.oy + 30);
 
-        g.drawString("PPM: ",Main.ox + 300, Main.oy + 275);
+        g.drawString("PPM: ", Main.ox + 300, Main.oy + 275);
         g.drawString(Integer.toString(ppm), Main.ox + 300, Main.oy + 295);
 
         g.drawString("Score:", Main.ox + 300, Main.oy + 225);
         g.drawString(Integer.toString(score), Main.ox + 300, Main.oy + 250);
 
-        int nextPieceX = 300 + 100 - nextPiece.width()*15;
-        int nextPieceY = 100 - nextPiece.height()*15;
+        int nextPieceX = 300 + 100 - nextPiece.width() * 15;
+        int nextPieceY = 100 - nextPiece.height() * 15;
 
         for (int yy = 0; yy < nextPiece.height(); yy++) {  // Drawing the next piece by looping through the piece array
             for (int xx = 0; xx < nextPiece.width(); xx++) {
                 if (nextPiece.piece[yy][xx] == 1) {
-                    g.drawImage(blocks.get(nextPiece.blockType), Main.ox + xx*30 + nextPieceX, Main.oy + yy*30 + nextPieceY, 30, 30, null);
+                    g.drawImage(blocks.get(nextPiece.blockType), Main.ox + xx * 30 + nextPieceX, Main.oy + yy * 30 + nextPieceY, 30, 30, null);
                 }
             }
         }
@@ -329,8 +328,8 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < currentPiece.height(); yy++) { // Draws the current dropping block using the same method as above
             for (int xx = 0; xx < currentPiece.width(); xx++) {
                 if (currentPiece.piece[yy][xx] != 0) {
-                    g.drawImage(blocksPreview.get(currentPiece.blockType),Main.ox + (currentPiece.x+xx)*30, Main.oy + (yPreview +yy)*30, 30, 30, null);
-                    g.drawImage(blocks.get(currentPiece.blockType), Main.ox + (currentPiece.x+xx)*30, Main.oy + (currentPiece.y+yy)*30, 30, 30, null);
+                    g.drawImage(blocksPreview.get(currentPiece.blockType), Main.ox + (currentPiece.x + xx) * 30, Main.oy + (yPreview + yy) * 30, 30, 30, null);
+                    g.drawImage(blocks.get(currentPiece.blockType), Main.ox + (currentPiece.x + xx) * 30, Main.oy + (currentPiece.y + yy) * 30, 30, 30, null);
                 }
             }
         }
@@ -339,14 +338,14 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < 19; yy++) {  // board
             for (int xx = 0; xx < 10; xx++) {
                 if (!board[yy][xx].equals(0)) {
-                    g.drawImage(blocks.get(board[yy][xx]), Main.ox + xx*30, Main.oy + yy*30, 30, 30, null);
+                    g.drawImage(blocks.get(board[yy][xx]), Main.ox + xx * 30, Main.oy + yy * 30, 30, 30, null);
                 }
             }
         }
 
         for (int xx = 0; xx < 10; xx++) {  // Drawing some border blocks
-            g.drawImage(blocks.get(100), Main.ox + xx*30, Main.oy + 19*30, 30, 30, null);
-            g.drawImage(blocks.get(100), Main.ox + xx*30, Main.oy, 30, 30, null);
+            g.drawImage(blocks.get(100), Main.ox + xx * 30, Main.oy + 19 * 30, 30, 30, null);
+            g.drawImage(blocks.get(100), Main.ox + xx * 30, Main.oy, 30, 30, null);
         }
 
         if (pause) { // Display paused if its paused

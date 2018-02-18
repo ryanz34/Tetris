@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 /**
  * Piece class
- *
+ * <p>
  * Contains the position of each piece and the rotation of the block.
  */
 
@@ -84,13 +84,13 @@ class Piece {
 
     /**
      * Constructor for the piece
-     *
+     * <p>
      * Chooses a random piece and set the x and y to default
      */
     public Piece() {
         blockType = (int) (Math.random() * 7) + 1;
-        pieceStates = states.get((int) (Math.random()*7));
-        stateNum = (int) (Math.random()*pieceStates.length);
+        pieceStates = states.get((int) (Math.random() * 7));
+        stateNum = (int) (Math.random() * pieceStates.length);
         piece = pieceStates[stateNum];
 
         x = 4;
