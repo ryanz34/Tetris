@@ -79,9 +79,9 @@ class GamePanel extends JPanel implements KeyListener {
             e.printStackTrace();
         }
 
-        board = new Integer[19][10];  // Creating a blank board
+        board = new Integer[18][10];  // Creating a blank board
 
-        for (int i = 0; i < 19; i++) {  // Setting the entire board to zeros and create the side gray blocks
+        for (int i = 0; i < 18; i++) {  // Setting the entire board to zeros and create the side gray blocks
             for (int j = 0; j < 10; j++) {
                 if (j == 0 || j == 9) {
                     board[i][j] = 100;
@@ -104,8 +104,8 @@ class GamePanel extends JPanel implements KeyListener {
      * Update the preview
      */
     private void previewUpdate() {
-        for (int ypp = currentPiece.y; ypp < 20; ypp++) {  // Increase the y until it intersects
-            if (ypp + currentPiece.height() < 20 && !arrayIntersect(currentPiece.x, ypp, currentPiece, board)) { // Testing if it intersects
+        for (int ypp = currentPiece.y; ypp < 19; ypp++) {  // Increase the y until it intersects
+            if (ypp + currentPiece.height() < 19 && !arrayIntersect(currentPiece.x, ypp, currentPiece, board)) { // Testing if it intersects
                 yPreview = ypp; // Setting the preview y to the right height
             } else {
                 break;
@@ -125,7 +125,7 @@ class GamePanel extends JPanel implements KeyListener {
     private boolean arrayIntersect(int x, int y, Piece checkPiece, Integer[][] board) {
         for (int yy = 0; yy < checkPiece.height(); yy++) {
             for (int xx = 0; xx < checkPiece.width(); xx++) {
-                if (xx > 9 || yy > 19) {
+                if (xx > 9 || yy > 18) {
                     return true;
 
                 } else if (checkPiece.piece[yy][xx] != 0 && board[yy + y][xx + x] != 0) {
@@ -202,11 +202,12 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
         if (e.getKeyCode() == e.VK_ESCAPE) {
+            if (gameOver) {  // If its game over then pressing any button will reset the game
+                removeKeyListener(this);  // Remove KeyListener to prevent conflicts
+                parent.gameOver();  // Call game over in the JFrame to change the page
+            }
+
             pause = !pause;  // Pausing and un-pausing the game
-        }
-        if (gameOver) {  // If its game over then pressing any button will reset the game
-            removeKeyListener(this);  // Remove KeyListener to prevent conflicts
-            parent.gameOver();  // Call game over in the JFrame to change the page
         }
     }
 
@@ -243,7 +244,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         boolean isFull;  // A boolean that marks if the board is full or not
 
-        for (int i = 18; i > -1; i--) {  // Loops through the board
+        for (int i = 17; i > -1; i--) {  // Loops through the board
             isFull = true;  // is full starts with being true, when an empty space is detected, it is set to false
             for (int j = 0; j < 10; j++) {
                 if (currentBoard.get(i)[j] == 0) {
@@ -258,11 +259,11 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
 
-        while (currentBoard.size() != 19) {  // Add new rows to the front of the arrayList
+        while (currentBoard.size() != 18) {  // Add new rows to the front of the arrayList
             currentBoard.add(0, new Integer[]{100, 0, 0, 0, 0, 0, 0, 0, 0, 100});
         }
 
-        for (int yy = 0; yy < 19; yy++) {  // Putting the board back
+        for (int yy = 0; yy < 18; yy++) {  // Putting the board back
             board[yy] = currentBoard.get(yy);
         }
 
@@ -281,7 +282,7 @@ class GamePanel extends JPanel implements KeyListener {
                 tick = Math.max(0, tick - (int) speed);  // Reset tick
                 currentPiece.y += 1;  // Increase the y
 
-                if (currentPiece.y + currentPiece.height() > 19 || arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) { // Check for collision
+                if (currentPiece.y + currentPiece.height() > 18 || arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) { // Check for collision
                     currentPiece.y--;  // If collide then move back one
                     placePiece();  // And place the piece
                 }
@@ -310,7 +311,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         // Block Preview
 
-        g.drawRoundRect(Main.ox + 330, Main.oy + 60, 200, 200, 10, 10);  // Drawing the texts
+        g.drawRoundRect(Main.ox + 330, Main.oy + 60, 240, 200, 10, 10);  // Drawing the texts
         g.drawString("Next Piece", Main.ox + 340, Main.oy + 90);
 
         g.drawString("DROP RATE: ", Main.ox + 330, Main.oy + 405);
@@ -322,7 +323,7 @@ class GamePanel extends JPanel implements KeyListener {
         g.drawString("Score:", Main.ox + 330, Main.oy + 295);
         g.drawString(Integer.toString(score), Main.ox + 330, Main.oy + 320);
 
-        int nextPieceX = 330 + 100 - nextPiece.width() * 15;
+        int nextPieceX = 330 + 120 - nextPiece.width() * 15;
         int nextPieceY = 175 - nextPiece.height() * 15;
 
         for (int yy = 0; yy < nextPiece.height(); yy++) {  // Drawing the next piece by looping through the piece array
@@ -337,17 +338,17 @@ class GamePanel extends JPanel implements KeyListener {
         for (int yy = 0; yy < currentPiece.height(); yy++) { // Draws the current dropping block using the same method as above
             for (int xx = 0; xx < currentPiece.width(); xx++) {
                 if (currentPiece.piece[yy][xx] != 0) {
-                    g.drawImage(blocksPreview.get(currentPiece.blockType), Main.ox + (currentPiece.x + xx) * 30, Main.oy + (yPreview + yy) * 30, 30, 30, null);
-                    g.drawImage(blocks.get(currentPiece.blockType), Main.ox + (currentPiece.x + xx) * 30, Main.oy + (currentPiece.y + yy) * 30, 30, 30, null);
+                    g.drawImage(blocksPreview.get(currentPiece.blockType), Main.ox + (currentPiece.x + xx) * 30, Main.oy + 30 + (yPreview + yy) * 30, 30, 30, null);
+                    g.drawImage(blocks.get(currentPiece.blockType), Main.ox + (currentPiece.x + xx) * 30, Main.oy + 30 + (currentPiece.y + yy) * 30, 30, 30, null);
                 }
             }
         }
 
         // Fixed board
-        for (int yy = 0; yy < 19; yy++) {  // board
+        for (int yy = 0; yy < 18; yy++) {  // board
             for (int xx = 0; xx < 10; xx++) {
                 if (!board[yy][xx].equals(0)) {
-                    g.drawImage(blocks.get(board[yy][xx]), Main.ox + xx * 30, Main.oy + yy * 30, 30, 30, null);
+                    g.drawImage(blocks.get(board[yy][xx]), Main.ox + xx * 30, Main.oy + 30 + yy * 30, 30, 30, null);
                 }
             }
         }
@@ -364,7 +365,7 @@ class GamePanel extends JPanel implements KeyListener {
         if (gameOver) {  // If its game over
             if (gameOverTick >= 30) {  // Flashing effect
                 g.setFont(contFont);
-                g.drawString("Press any key to continue!", Main.ox + 5, Main.oy + 500);
+                g.drawString("Press ESC to continue!", Main.ox + 5, Main.oy + 500);
             }
 
             if (gameOverTick >= 60) {
