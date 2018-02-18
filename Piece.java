@@ -63,7 +63,7 @@ class Piece {
             {1, 1}}};
 
     // Adding all the states into an ArrayList to easier processing later on
-    private ArrayList<Integer[][][]> states = new ArrayList<>() {{
+    private ArrayList<Integer[][][]> states = new ArrayList<Integer[][][]>() {{
         add(Z_STATES);
         add(I_Z_STATES);
         add(L_STATES);

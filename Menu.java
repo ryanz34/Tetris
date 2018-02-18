@@ -43,7 +43,6 @@ public class Menu extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) { // Listens for Keyboard input
-        System.out.println(selecter_option);
         if (e.getKeyCode() == e.VK_UP) {
             if (selecter_option > 0) {  // If the slider can move down then move it
                 selecter_option -= 1;
