@@ -304,17 +304,20 @@ class GamePanel extends JPanel implements KeyListener {
 
         // Block Preview
 
-        g.drawRoundRect(Main.ox + 300, Main.oy, 200, 200, 10, 10);  // Drawing the texts
-        g.drawString("Next Piece", Main.ox + 310, Main.oy + 30);
+        g.drawRoundRect(Main.ox + 330, Main.oy + 60, 200, 200, 10, 10);  // Drawing the texts
+        g.drawString("Next Piece", Main.ox + 340, Main.oy + 90);
 
-        g.drawString("PPM: ", Main.ox + 300, Main.oy + 275);
-        g.drawString(Integer.toString(ppm), Main.ox + 300, Main.oy + 295);
+        g.drawString("DROP RATE: ", Main.ox + 330, Main.oy + 405);
+        g.drawString(Double.toString(Math.round((20 / speed) * 1000d) / 1000d) + " blks/s", Main.ox + 330, Main.oy + 430);
 
-        g.drawString("Score:", Main.ox + 300, Main.oy + 225);
-        g.drawString(Integer.toString(score), Main.ox + 300, Main.oy + 250);
+        g.drawString("PPM: ", Main.ox + 330, Main.oy + 350);
+        g.drawString(Integer.toString(ppm), Main.ox + 330, Main.oy + 375);
 
-        int nextPieceX = 300 + 100 - nextPiece.width() * 15;
-        int nextPieceY = 100 - nextPiece.height() * 15;
+        g.drawString("Score:", Main.ox + 330, Main.oy + 295);
+        g.drawString(Integer.toString(score), Main.ox + 330, Main.oy + 320);
+
+        int nextPieceX = 330 + 100 - nextPiece.width() * 15;
+        int nextPieceY = 175 - nextPiece.height() * 15;
 
         for (int yy = 0; yy < nextPiece.height(); yy++) {  // Drawing the next piece by looping through the piece array
             for (int xx = 0; xx < nextPiece.width(); xx++) {

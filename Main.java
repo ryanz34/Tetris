@@ -17,7 +17,7 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
 
     public static String page = "menu"; // Checking which page we are currently on to switch JPanels
     public static int w = 600; // The current height and width of the JFrame
-    public static int h = 600;
+    public static int h = 630;
     public static int ox = 0; // The offset needed to center the JPanel on the JFrame
     public static int oy = 0;
 

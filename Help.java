@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 
+import static java.lang.Math.max;
+
 /**
  * Help class
  * <p>
@@ -15,6 +17,7 @@ public class Help extends JPanel implements KeyListener {
 
     private Main parent;
     private Font menuFont;
+    private BufferedImage background;  // Loading the images
 
     public Help(Main parent) {
         setSize(Main.w, Main.h);
@@ -24,6 +27,7 @@ public class Help extends JPanel implements KeyListener {
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, is);  // Creating the font from an inputstream
             this.menuFont = font.deriveFont(15f);
+            background = ImageIO.read(new File("data/propaganda.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,10 +57,15 @@ public class Help extends JPanel implements KeyListener {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
+
+        g.drawImage(background, 0, 0, max(Main.w, Main.h), max(Main.w, Main.h), this);  // Draws the background
         g.setFont(menuFont);
 
-        g.setColor(Color.BLACK);
+        g.setColor(Color.WHITE);
         g.fillRect(Main.ox, Main.oy, 600, 600);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(Main.ox + 4, Main.oy + 4, 592, 592);
 
         g.setColor(Color.WHITE);
         g.drawString("~How 2 play tetris~", Main.ox + 30, Main.oy + 90); // Displaying the texts
