@@ -101,6 +101,12 @@ public class Main extends JFrame implements ActionListener, ComponentListener {
         page = "game";
     }
 
+    public void gameOver() {
+        this.getContentPane().remove(game);
+        game = null;
+        page = "menu";
+    }
+
     public void exit() {  // Exits the game
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Dispatches an event that simulates a user clicking the x button
     }
