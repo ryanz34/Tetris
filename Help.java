@@ -6,6 +6,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 
+/**
+ * Help class
+ *
+ * A copy of the Menu class that display the help screen
+ */
 public class Help extends JPanel implements KeyListener {
 
     private Main parent;
@@ -15,9 +20,9 @@ public class Help extends JPanel implements KeyListener {
         setSize(Main.w, Main.h);
         this.parent = parent;
 
-        InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");
+        InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");  // Getting and creating the font
         try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+            Font font = Font.createFont(Font.TRUETYPE_FONT, is);  // Creating the font from an inputstream
             this.menuFont = font.deriveFont(15f);
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,8 +42,7 @@ public class Help extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        parent.startMenuFromHelp();
-        repaint();
+        parent.startMenuFromHelp();  // If anything is pressed then switch back the menu
     }
 
     @Override
@@ -55,7 +59,7 @@ public class Help extends JPanel implements KeyListener {
         g.fillRect(Main.ox, Main.oy, 600, 600);
 
         g.setColor(Color.WHITE);
-        g.drawString("~How 2 play tetris~", Main.ox + 30, Main.oy + 90);
+        g.drawString("~How 2 play tetris~", Main.ox + 30, Main.oy + 90); // Displaying the texts
         g.drawString("K so basically u have to get the bar", Main.ox + 30, Main.oy + 120);
         g.drawString("things 2 like line up and wreck 360", Main.ox + 30, Main.oy + 150);
         g.drawString("no scope each other and lik the", Main.ox + 30, Main.oy + 180);

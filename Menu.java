@@ -8,29 +8,29 @@ import java.io.InputStream;
 
 public class Menu extends JPanel implements KeyListener {
 
-    private Main parent;
-    private BufferedImage menuImage;
-    private BufferedImage selecter;
-    private Font menuFont;
+    private Main parent;  // The JFrame which this Menu was created by
+    private BufferedImage menuImage; // The images that the menu will use
+    private BufferedImage selecter; // A selector
+    private Font menuFont;  // The 8-bit font
 
-    private int selecter_option = 0;
+    private int selecter_option = 0;  // The location where the selector is on
 
     public Menu (Main parent){
         setSize(Main.w, Main.h);
         this.parent = parent;
 
-        InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");
+        InputStream is = Help.class.getResourceAsStream("data/PressStart2P.ttf");  // Loads the font using InputStream
         try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-            this.menuFont = font.deriveFont(20f);
+            Font font = Font.createFont(Font.TRUETYPE_FONT, is); // Creating a font
+            this.menuFont = font.deriveFont(20f);  // Deriving the font we just created because it has a size of 0
 
-            menuImage = ImageIO.read(new File("data/menu/menu.png"));
+            menuImage = ImageIO.read(new File("data/menu/menu.png"));  // Loading the images using imageIO
             selecter = ImageIO.read(new File("data/menu/selecter.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        addKeyListener(this);
+        addKeyListener(this); // Adding a keylistener to the JPanel
 
         repaint();
 
@@ -42,22 +42,22 @@ public class Menu extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e) { // Listens for Keyboard input
         System.out.println(selecter_option);
         if (e.getKeyCode() == e.VK_UP) {
-            if (selecter_option > 0) {
+            if (selecter_option > 0) {  // If the slider can move down then move it
                 selecter_option -= 1;
                 repaint();
             }
         } else if (e.getKeyCode() == e.VK_DOWN) {
-            if (selecter_option < 2) {
+            if (selecter_option < 2) {  // Same as above but for moving up the selector
                 selecter_option += 1;
                 repaint();
             }
-        } else if (e.getKeyCode() == e.VK_ENTER) {
-            if (selecter_option == 0) {
-                removeKeyListener(this);
-                parent.startGame();
+        } else if (e.getKeyCode() == e.VK_ENTER) {  // Select an option
+            if (selecter_option == 0) {  // Start game
+                removeKeyListener(this);  // Removes the keylistener so we will trigger the right Panel
+                parent.startGame();  // Starting the game
             }
             else if (selecter_option == 1) {
                 removeKeyListener(this);
@@ -77,13 +77,13 @@ public class Menu extends JPanel implements KeyListener {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-        g.setFont(menuFont);
+        g.setFont(menuFont);  // Setting the current font
 
-        g.drawImage(menuImage, Main.ox, Main.oy, 600, 600,null);
+        g.drawImage(menuImage, Main.ox, Main.oy, 600, 600,this);
 
         g.setColor(Color.BLACK);
 
-        g.drawString("Start", Main.ox + 152, Main.oy + 344);
+        g.drawString("Start", Main.ox + 152, Main.oy + 344);  // Drawing the shadow for each text using the offset
         g.drawString("Help", Main.ox + 152, Main.oy + 387);
         g.drawString("Quit", Main.ox + 152, Main.oy + 430);
 
@@ -93,7 +93,7 @@ public class Menu extends JPanel implements KeyListener {
         g.drawString("Help", Main.ox + 150, Main.oy + 385);
         g.drawString("Quit", Main.ox + 150, Main.oy + 428);
 
-        g.drawImage(selecter, Main.ox + 100, Main.oy + 317 + 43 * selecter_option, selecter.getWidth(), selecter.getHeight(), null);
+        g.drawImage(selecter, Main.ox + 100, Main.oy + 317 + 43 * selecter_option, selecter.getWidth(), selecter.getHeight(), this); // Drawing the selector
 
     }
 
