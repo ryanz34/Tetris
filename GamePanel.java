@@ -125,9 +125,8 @@ class GamePanel extends JPanel implements KeyListener {
     private boolean arrayIntersect(int x, int y, Piece checkPiece, Integer[][] board) {
         for (int yy = 0; yy < checkPiece.height(); yy++) {
             for (int xx = 0; xx < checkPiece.width(); xx++) {
-                if (xx > 9 || yy > 18) {
+                if ((xx > 9 || yy > 18) && checkPiece.piece[yy][xx] == 1) {
                     return true;
-
                 } else if (checkPiece.piece[yy][xx] != 0 && board[yy + y][xx + x] != 0) {
                     return true;
                 }
@@ -164,23 +163,17 @@ class GamePanel extends JPanel implements KeyListener {
                 previewUpdate();
 
             } else if (e.getKeyCode() == e.VK_UP) {  // When up is pressed
-                int previous_state = currentPiece.stateNum;  // Makes a backup of the current state
-                currentPiece.stateNum++;  // Increase the state num
-                if (currentPiece.stateNum == currentPiece.pieceStates.length) {  // Make it 0 if its greater than the number of states
-                    currentPiece.stateNum = 0;
-                }
+                Integer[][] previous_state = currentPiece.piece;  // Makes a backup of the current state
+                currentPiece.get_new_state();
 
-                if (currentPiece.y + currentPiece.pieceStates[currentPiece.stateNum].length <= 18) {  // Check the rotated piece fits on the board
-                    currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];  // Advance the state/rotate
+                if (currentPiece.y + currentPiece.newState.length <= 18) {  // Check the rotated piece fits on the board
+                    currentPiece.piece = currentPiece.newState;  // Advance the state/rotate
 
                     if (arrayIntersect(currentPiece.x, currentPiece.y, currentPiece, board)) {  // Check if intersect
-                        currentPiece.stateNum = previous_state;  // If it does than reset everything
-                        currentPiece.piece = currentPiece.pieceStates[currentPiece.stateNum];
+                        currentPiece.piece = previous_state;
                     } else {
                         repaint();
                     }
-                } else {
-                    currentPiece.stateNum = previous_state;
                 }
 
                 previewUpdate();
